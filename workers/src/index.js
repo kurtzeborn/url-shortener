@@ -61,9 +61,9 @@ function isValidId(id) {
  */
 async function lookupUrl(id, env) {
   const storageAccount = env.AZURE_STORAGE_ACCOUNT;
-  const storageKey = env.AZURE_STORAGE_KEY;
+  const storageSas = env.AZURE_STORAGE_SAS;
 
-  if (!storageAccount || !storageKey) {
+  if (!storageAccount || !storageSas) {
     console.error('Azure storage credentials not configured');
     return null;
   }
@@ -73,26 +73,13 @@ async function lookupUrl(id, env) {
   const rowKey = id;
 
   try {
-    // Query Azure Table Storage using REST API
-    const timestamp = new Date().toUTCString();
+    // Query Azure Table Storage using REST API with SAS token
     const tableName = 'URLs';
-    const queryUrl = `https://${storageAccount}.table.core.windows.net/${tableName}(PartitionKey='${partitionKey}',RowKey='${rowKey}')`;
-
-    // Create authorization header
-    const authHeader = await createAuthHeader(
-      'GET',
-      storageAccount,
-      storageKey,
-      queryUrl,
-      timestamp
-    );
+    const queryUrl = `https://${storageAccount}.table.core.windows.net/${tableName}(PartitionKey='${partitionKey}',RowKey='${rowKey}')?${storageSas}`;
 
     const response = await fetch(queryUrl, {
       method: 'GET',
       headers: {
-        'x-ms-date': timestamp,
-        'x-ms-version': '2020-12-06',
-        Authorization: authHeader,
         Accept: 'application/json;odata=nometadata',
       },
     });
@@ -133,53 +120,4 @@ async function trackClick(id, env) {
   }
 }
 
-/**
- * Create Azure Storage Shared Key authorization header
- */
-async function createAuthHeader(method, storageAccount, storageKey, url, timestamp) {
-  const urlObj = new URL(url);
-  const path = urlObj.pathname;
 
-  // Construct string to sign
-  const stringToSign = [
-    method,
-    '', // Content-Encoding
-    '', // Content-Language
-    '', // Content-Length
-    '', // Content-MD5
-    '', // Content-Type
-    '', // Date
-    '', // If-Modified-Since
-    '', // If-Match
-    '', // If-None-Match
-    '', // If-Unmodified-Since
-    '', // Range
-    `x-ms-date:${timestamp}`,
-    `x-ms-version:2020-12-06`,
-    `/${storageAccount}${path}`,
-  ].join('\n');
-
-  // Sign with HMAC-SHA256
-  const signature = await hmacSha256(storageKey, stringToSign);
-  return `SharedKey ${storageAccount}:${signature}`;
-}
-
-/**
- * HMAC-SHA256 signing
- */
-async function hmacSha256(key, message) {
-  const encoder = new TextEncoder();
-  const keyData = Uint8Array.from(atob(key), (c) => c.charCodeAt(0));
-  const messageData = encoder.encode(message);
-
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw',
-    keyData,
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-
-  const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
-  return btoa(String.fromCharCode(...new Uint8Array(signature)));
-}

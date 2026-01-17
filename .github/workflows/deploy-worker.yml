@@ -31,11 +31,11 @@ jobs:
           workingDirectory: './workers'
           secrets: |
             AZURE_STORAGE_ACCOUNT
-            AZURE_STORAGE_KEY
+            AZURE_STORAGE_SAS
             AZURE_API_URL
             INTERNAL_API_KEY
         env:
           AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
-          AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_KEY }}
+          AZURE_STORAGE_SAS: ${{ secrets.AZURE_STORAGE_SAS }}
           AZURE_API_URL: ${{ secrets.AZURE_API_URL }}
           INTERNAL_API_KEY: ${{ secrets.INTERNAL_API_KEY }}
