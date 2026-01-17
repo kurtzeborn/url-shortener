@@ -3,18 +3,17 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 account_id = "4ea5db67f7efd8ffd612c68abc7bd48a"
 
+# Route all traffic from k61.dev/* to this worker
+routes = [
+  { pattern = "k61.dev/*", zone_name = "k61.dev" }
+]
+
 # Environment variables (set via CLI or dashboard)
 # For local dev, create a .dev.vars file with:
 # AZURE_STORAGE_ACCOUNT=devstoreaccount1
 # AZURE_STORAGE_KEY=your-key
 # AZURE_API_URL=http://localhost:7071
 # INTERNAL_API_KEY=dev-api-key
-
-[env.production]
-name = "k61-dev-redirector"
-routes = [
-  { pattern = "k61.dev/*", zone_name = "k61.dev" }
-]
 
 [env.development]
 name = "k61-dev-redirector-dev"
