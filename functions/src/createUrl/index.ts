@@ -1,8 +1,8 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
 import {
   getTableClient,
+  ensureTableExists,
   generateId,
-  isValidId,
   isValidUrl,
   getUrlPartitionKey,
   responses,
@@ -32,9 +32,13 @@ export async function createUrl(
       return responses.badRequest('Invalid URL format');
     }
 
+    // Ensure tables exist
+    await ensureTableExists('URLs');
+    await ensureTableExists('UserURLs');
+
     // Generate unique ID (with collision retry)
     const urlsClient = getTableClient('URLs');
-    let id: string;
+    let id: string = '';
     let attempts = 0;
     const maxAttempts = 10;
 
@@ -53,7 +57,7 @@ export async function createUrl(
       }
     }
 
-    if (attempts >= maxAttempts) {
+    if (attempts >= maxAttempts || id === '') {
       return responses.serverError('Failed to generate unique ID');
     }
 

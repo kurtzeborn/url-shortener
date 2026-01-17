@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, responses } from '../utils';
+import { getTableClient, ensureTableExists, responses } from '../utils';
 
 /**
  * GET /api/urls
@@ -12,6 +12,9 @@ export async function getUrls(
   try {
     // TODO: Get user from auth token
     const userEmail = 'test@example.com'; // Placeholder until auth is implemented
+
+    // Ensure table exists
+    await ensureTableExists('UserURLs');
 
     // Parse query parameters
     const page = parseInt(request.query.get('page') || '1');

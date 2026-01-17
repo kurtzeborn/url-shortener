@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, responses } from '../utils';
+import { getTableClient, ensureTableExists, responses } from '../utils';
 
 /**
  * POST /api/click/:id
@@ -21,6 +21,10 @@ export async function clickTracker(
     if (!id) {
       return responses.badRequest('Missing ID parameter');
     }
+
+    // Ensure tables exist
+    await ensureTableExists('URLs');
+    await ensureTableExists('UserURLs');
 
     // Get partition key
     const partitionKey = id.length >= 2 ? id.substring(0, 2) : id;

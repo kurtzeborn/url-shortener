@@ -3,13 +3,16 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 
 # Environment variables (set via CLI or dashboard)
-# AZURE_STORAGE_ACCOUNT = "your-storage-account"
-# AZURE_STORAGE_KEY = "your-storage-key"
-# INTERNAL_API_KEY = "generate-a-secure-random-key"
+# For local dev, create a .dev.vars file with:
+# AZURE_STORAGE_ACCOUNT=devstoreaccount1
+# AZURE_STORAGE_KEY=your-key
+# INTERNAL_API_KEY=dev-api-key
 
 [env.production]
 name = "k61-dev-redirector"
-route = "k61.dev/*"
+routes = [
+  { pattern = "k61.dev/*", zone_name = "k61.dev" }
+]
 
 [env.development]
 name = "k61-dev-redirector-dev"

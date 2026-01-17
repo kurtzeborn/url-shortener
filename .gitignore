@@ -42,6 +42,10 @@ coverage/
 # Cloudflare Workers
 .wrangler/
 wrangler.toml.backup
+.dev.vars
+
+# Azurite local storage
+.azurite/
 
 # Azure
 *.pubxml

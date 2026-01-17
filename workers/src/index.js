@@ -79,7 +79,7 @@ async function lookupUrl(id, env) {
     const queryUrl = `https://${storageAccount}.table.core.windows.net/${tableName}(PartitionKey='${partitionKey}',RowKey='${rowKey}')`;
 
     // Create authorization header
-    const authHeader = createAuthHeader(
+    const authHeader = await createAuthHeader(
       'GET',
       storageAccount,
       storageKey,
@@ -135,7 +135,7 @@ async function trackClick(id, env) {
 /**
  * Create Azure Storage Shared Key authorization header
  */
-function createAuthHeader(method, storageAccount, storageKey, url, timestamp) {
+async function createAuthHeader(method, storageAccount, storageKey, url, timestamp) {
   const urlObj = new URL(url);
   const path = urlObj.pathname;
 
@@ -159,7 +159,7 @@ function createAuthHeader(method, storageAccount, storageKey, url, timestamp) {
   ].join('\n');
 
   // Sign with HMAC-SHA256
-  const signature = hmacSha256(storageKey, stringToSign);
+  const signature = await hmacSha256(storageKey, stringToSign);
   return `SharedKey ${storageAccount}:${signature}`;
 }
 

@@ -2,15 +2,51 @@
  * Shared utilities for Azure Functions
  */
 
-import { TableClient } from '@azure/data-tables';
+import { TableClient, TableServiceClient } from '@azure/data-tables';
 
-// Get Table Storage clients
+// Cache for initialized table clients
+const tableClients: Map<string, TableClient> = new Map();
+const tablesInitialized: Set<string> = new Set();
+
+// Get Table Storage clients (creates table if not exists)
 export function getTableClient(tableName: string): TableClient {
   const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
   if (!connectionString) {
     throw new Error('AZURE_STORAGE_CONNECTION_STRING not configured');
   }
-  return TableClient.fromConnectionString(connectionString, tableName);
+  
+  if (!tableClients.has(tableName)) {
+    const client = TableClient.fromConnectionString(connectionString, tableName);
+    tableClients.set(tableName, client);
+  }
+  
+  return tableClients.get(tableName)!;
+}
+
+/**
+ * Ensure a table exists (call this before first use)
+ */
+export async function ensureTableExists(tableName: string): Promise<void> {
+  if (tablesInitialized.has(tableName)) {
+    return;
+  }
+  
+  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+  if (!connectionString) {
+    throw new Error('AZURE_STORAGE_CONNECTION_STRING not configured');
+  }
+  
+  const serviceClient = TableServiceClient.fromConnectionString(connectionString);
+  try {
+    await serviceClient.createTable(tableName);
+  } catch (error: any) {
+    // Ignore "TableAlreadyExists" error
+    if (error?.statusCode !== 409) {
+      throw error;
+    }
+  }
+  
+  tablesInitialized.add(tableName);
 }
 
 // Base62 character set for ID generation

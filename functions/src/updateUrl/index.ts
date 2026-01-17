@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, isValidUrl, getUrlPartitionKey, responses } from '../utils';
+import { getTableClient, ensureTableExists, isValidUrl, getUrlPartitionKey, responses } from '../utils';
 
 /**
  * PUT /api/urls/:id
@@ -28,6 +28,10 @@ export async function updateUrl(
     if (!isValidUrl(url)) {
       return responses.badRequest('Invalid URL format');
     }
+
+    // Ensure tables exist
+    await ensureTableExists('URLs');
+    await ensureTableExists('UserURLs');
 
     const partitionKey = getUrlPartitionKey(id);
 

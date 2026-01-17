@@ -1,5 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, getUrlPartitionKey, responses } from '../utils';
+import { getTableClient, ensureTableExists, getUrlPartitionKey, responses } from '../utils';
 
 /**
  * DELETE /api/urls/:id
@@ -17,6 +17,10 @@ export async function deleteUrl(
     if (!id) {
       return responses.badRequest('Missing ID parameter');
     }
+
+    // Ensure tables exist
+    await ensureTableExists('URLs');
+    await ensureTableExists('UserURLs');
 
     const partitionKey = getUrlPartitionKey(id);
 

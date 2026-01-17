@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://localhost:7071/api'; // TODO: Use environment variable
+const API_BASE = '/api'; // Uses Vite proxy in development
 
 function Dashboard() {
   const [urls, setUrls] = useState([]);
