@@ -1,0 +1,17 @@
+# Ignore source files (we deploy compiled JS)
+src/
+*.ts
+
+# Ignore dev-only files
+.vscode/
+.git/
+.gitignore
+local.settings.json
+*.md
+tsconfig.json
+
+# Don't ignore (required for deployment):
+# - dist/ (compiled output)
+# - node_modules/ (dependencies)
+# - host.json (Azure Functions config)
+# - package.json (for runtime info)
