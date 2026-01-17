@@ -28,12 +28,13 @@ function Settings() {
         body: JSON.stringify({ email }),
       });
 
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to add user');
+        throw new Error(data.error?.message || data.error || 'Failed to add user');
       }
 
-      const data = await response.json();
       setSuccess(`User added! Remaining invites today: ${data.remainingInvites}`);
       setEmail('');
     } catch (err) {
