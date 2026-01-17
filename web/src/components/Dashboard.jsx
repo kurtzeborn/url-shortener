@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { API_BASE } from '../api';
+import { API_BASE, parseApiResponse, getErrorMessage } from '../api';
 
 function Dashboard() {
   const { getAccessToken } = useAuth();
@@ -11,6 +11,8 @@ function Dashboard() {
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [editingUrl, setEditingUrl] = useState(null);
+  const [editValue, setEditValue] = useState('');
 
   const fetchUrls = useCallback(async () => {
     setLoading(true);
@@ -75,6 +77,43 @@ function Dashboard() {
     alert('Copied to clipboard!');
   };
 
+  const startEdit = (url) => {
+    setEditingUrl(url);
+    setEditValue(url.url);
+  };
+
+  const cancelEdit = () => {
+    setEditingUrl(null);
+    setEditValue('');
+  };
+
+  const handleEdit = async () => {
+    if (!editingUrl) return;
+
+    try {
+      const token = await getAccessToken();
+      const response = await fetch(`${API_BASE}/api/urls/${editingUrl.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ url: editValue }),
+      });
+
+      const { data, ok } = await parseApiResponse(response);
+
+      if (!ok) {
+        throw new Error(getErrorMessage(data, 'Failed to update URL'));
+      }
+
+      cancelEdit();
+      fetchUrls();
+    } catch (err) {
+      alert('Error updating URL: ' + err.message);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -130,6 +169,9 @@ function Dashboard() {
                     >
                       Copy
                     </button>
+                    <button className="btn btn-secondary" onClick={() => startEdit(url)}>
+                      Edit
+                    </button>
                     <button className="btn btn-danger" onClick={() => handleDelete(url.id)}>
                       Delete
                     </button>
@@ -159,6 +201,35 @@ function Dashboard() {
             </button>
           </div>
         </>
+      )}
+
+      {editingUrl && (
+        <div className="modal-overlay" onClick={cancelEdit}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Edit URL</h2>
+            <p style={{ color: '#666', marginBottom: '15px' }}>
+              Editing: <strong>{editingUrl.shortUrl}</strong>
+            </p>
+            <div className="form-group">
+              <label className="form-label">Destination URL</label>
+              <input
+                type="url"
+                className="form-input"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                autoFocus
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <button className="btn btn-secondary" onClick={cancelEdit}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleEdit}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
