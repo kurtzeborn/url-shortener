@@ -102,24 +102,19 @@ async function lookupUrl(id, env) {
 async function trackClick(id, env) {
   const apiKey = env.INTERNAL_API_KEY;
   const apiUrl = env.AZURE_API_URL;
-  
-  console.log(`trackClick: id=${id}, apiUrl=${apiUrl}, hasKey=${!!apiKey}`);
-  
   if (!apiKey || !apiUrl) {
-    console.log('trackClick: Missing credentials, skipping');
     return;
   }
 
   try {
-    const response = await fetch(`${apiUrl}/api/click/${id}`, {
+    await fetch(`${apiUrl}/api/click/${id}`, {
       method: 'POST',
       headers: {
         'X-Internal-Key': apiKey,
         'Content-Type': 'application/json',
       },
     });
-    console.log(`trackClick: Response status=${response.status}`);
   } catch (error) {
-    console.error('Error tracking click:', error);
+    // Silently fail - don't impact redirects
   }
 }
