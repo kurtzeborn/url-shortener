@@ -1,9 +1,21 @@
 # Tests
 
-This folder contains integration and end-to-end tests for the URL shortener.
+Tests are located within each component:
 
-## Structure
+- `functions/` - Jest unit tests (42 tests)
+  - `src/*.test.ts` - API and auth tests
+- `web/` - Vitest unit tests (9 tests)
+  - `src/*.test.js` - Frontend utility tests
 
-- `unit/` - Unit tests for individual functions
-- `integration/` - Integration tests for API endpoints
-- `e2e/` - End-to-end tests for full user flows
+## Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run function tests only
+npm run test:functions
+
+# Run web tests only
+npm run test:web
+```

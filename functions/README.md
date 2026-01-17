@@ -13,12 +13,11 @@ Backend API for the URL shortener built with Azure Functions.
 ### Click Tracking
 - `POST /api/click/:id` - Increment click count (internal, called by Worker)
 
-### User Management
-- `POST /api/users/add` - Add user to allowlist (rate limited)
+### Authentication
+- `POST /api/auth` - Validate JWT token and check user authorization
 
-### Authentication (TODO)
-- `POST /api/auth/login` - Initiate Microsoft OAuth flow
-- `POST /api/auth/callback` - Handle OAuth callback
+### User Management
+- `POST /api/users` - Add user to allowlist (rate limited, 10/day)
 
 ## Development
 

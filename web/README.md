@@ -24,12 +24,18 @@ npm run dev  # Start development server at http://localhost:5173
 npm run build  # Creates production build in dist/
 ```
 
-## TODO
+## Status
 
-- [ ] Implement Microsoft OAuth authentication
-- [ ] Add URL editing functionality
-- [ ] Improve mobile responsiveness
-- [ ] Add loading skeletons
-- [ ] Add URL validation UI feedback
-- [ ] Add QR code generation for URLs
-- [ ] Add export URLs feature
+- [x] Microsoft OAuth authentication
+- [x] URL editing functionality
+- [x] Mobile responsive CSS
+- [x] Dashboard with sorting and pagination
+- [x] Copy to clipboard
+- [x] Font Awesome icons
+
+## Future Enhancements
+
+- [ ] [QR code generation](https://github.com/kurtzeborn/url-shortener/issues/8)
+- [ ] [Dashboard filtering](https://github.com/kurtzeborn/url-shortener/issues/6)
+- [ ] Loading skeletons
+- [ ] Export URLs feature

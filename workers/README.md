@@ -24,10 +24,11 @@ npm run deploy  # Deploy to Cloudflare
 
 ## Environment Variables
 
-Set these via Cloudflare dashboard or CLI:
+Set these via Cloudflare dashboard or `wrangler secret put`:
 
 - `AZURE_STORAGE_ACCOUNT` - Your Azure storage account name
-- `AZURE_STORAGE_KEY` - Your Azure storage account key
+- `AZURE_STORAGE_SAS` - SAS token for Table Storage access
+- `AZURE_API_URL` - Azure Functions base URL
 - `INTERNAL_API_KEY` - Secure key for calling click tracking API
 
 ## Testing Locally
