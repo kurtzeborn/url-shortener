@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE = '/api'; // Uses Vite proxy in development
+// API base URL - use environment variable in production
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 function Dashboard() {
   const { getAccessToken } = useAuth();
@@ -24,7 +25,7 @@ function Dashboard() {
     try {
       const token = await getAccessToken();
       const response = await fetch(
-        `${API_BASE}/urls?page=${page}&pageSize=10&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        `${API_BASE}/api/urls?page=${page}&pageSize=10&sortBy=${sortBy}&sortOrder=${sortOrder}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -53,7 +54,7 @@ function Dashboard() {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${API_BASE}/urls/${id}`, {
+      const response = await fetch(`${API_BASE}/api/urls/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

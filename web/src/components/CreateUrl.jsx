@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE = '/api'; // Uses Vite proxy in development
+// API base URL - use environment variable in production
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 function CreateUrl({ onSuccess }) {
   const { getAccessToken } = useAuth();
@@ -18,7 +19,7 @@ function CreateUrl({ onSuccess }) {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${API_BASE}/urls`, {
+      const response = await fetch(`${API_BASE}/api/urls`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

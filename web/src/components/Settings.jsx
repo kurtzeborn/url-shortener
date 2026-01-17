@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
-const API_BASE = 'http://localhost:7071/api'; // TODO: Use environment variable
+// API base URL - use environment variable in production
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 function Settings() {
   const [email, setEmail] = useState('');
@@ -15,7 +17,7 @@ function Settings() {
     setSuccess(null);
 
     try {
-      const response = await fetch(`${API_BASE}/users/add`, {
+      const response = await fetch(`${API_BASE}/api/users/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
