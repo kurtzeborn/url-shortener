@@ -112,10 +112,17 @@ function Dashboard() {
             <ul className="url-list">
               {urls.map((url) => (
                 <li key={url.id} className="url-item">
-                  <div className="url-short">{url.shortUrl}</div>
-                  <div className="url-long">{url.url}</div>
-                  <div className="url-stat"><i className="fa fa-mouse-pointer"></i> {url.clickCount}</div>
+                  <div className="url-short" style={{ marginRight: '20px' }}>
+                    <a href={url.shortUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                      {url.shortUrl}
+                    </a>
+                  </div>
+                  <div className="url-long" style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <i className="fa fa-chain" style={{ marginRight: '8px', flexShrink: 0, opacity: 0.6 }}></i>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{url.url}</span>
+                  </div>
                   <div className="url-stat"><i className="fa fa-calendar"></i> {new Date(url.createdAt).toLocaleDateString()}</div>
+                  <div className="url-stat"><i className="fa fa-bar-chart"></i> {url.clickCount}</div>
                   <div className="url-actions">
                     <button
                       className="btn btn-icon"
