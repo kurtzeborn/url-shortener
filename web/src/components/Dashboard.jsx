@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const API_BASE = '/api'; // Uses Vite proxy in development
 
 function Dashboard() {
+  const { getAccessToken } = useAuth();
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,8 +22,14 @@ function Dashboard() {
     setError(null);
 
     try {
+      const token = await getAccessToken();
       const response = await fetch(
-        `${API_BASE}/urls?page=${page}&pageSize=10&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        `${API_BASE}/urls?page=${page}&pageSize=10&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!response.ok) {
@@ -30,7 +38,7 @@ function Dashboard() {
 
       const data = await response.json();
       setUrls(data.urls);
-      setTotalPages(data.totalPages);
+      setTotalPages(data.pagination?.totalPages || data.totalPages || 1);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -44,8 +52,12 @@ function Dashboard() {
     }
 
     try {
+      const token = await getAccessToken();
       const response = await fetch(`${API_BASE}/urls/${id}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
@@ -109,7 +121,7 @@ function Dashboard() {
                     <div className="url-long">{url.url}</div>
                     <div className="url-stats">
                       <span>🔗 {url.clickCount} clicks</span>
-                      <span>📅 {new Date(url.createdDate).toLocaleDateString()}</span>
+                      <span>📅 {new Date(url.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                   <div className="url-actions">

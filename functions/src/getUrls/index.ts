@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, ensureTableExists, responses } from '../utils';
+import { getTableClient, ensureTableExists, responses, buildShortUrl } from '../utils';
+import { authenticateRequest } from '../auth';
 
 /**
  * GET /api/urls
@@ -10,8 +11,12 @@ export async function getUrls(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   try {
-    // TODO: Get user from auth token
-    const userEmail = 'test@example.com'; // Placeholder until auth is implemented
+    // Authenticate and authorize the request
+    const auth = await authenticateRequest(request.headers.get('Authorization'));
+    if (!auth.success) {
+      return auth.response;
+    }
+    const userEmail = auth.user.email;
 
     // Ensure table exists
     await ensureTableExists('UserURLs');
@@ -35,9 +40,9 @@ export async function getUrls(
     for await (const entity of entities) {
       urls.push({
         id: entity.rowKey,
-        shortUrl: `https://k61.dev/${entity.rowKey}`,
+        shortUrl: buildShortUrl(entity.rowKey as string),
         url: entity.URL,
-        createdDate: entity.CreatedDate,
+        createdAt: entity.CreatedAt || entity.CreatedDate, // Support both old and new field names
         clickCount: entity.ClickCount || 0,
       });
     }
@@ -50,8 +55,8 @@ export async function getUrls(
           : b.clickCount - a.clickCount;
       } else {
         // Sort by date
-        const dateA = new Date(a.createdDate).getTime();
-        const dateB = new Date(b.createdDate).getTime();
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       }
     });
@@ -60,13 +65,18 @@ export async function getUrls(
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const paginatedUrls = urls.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(urls.length / pageSize);
 
     return responses.ok({
       urls: paginatedUrls,
-      page,
-      pageSize,
-      totalCount: urls.length,
-      totalPages: Math.ceil(urls.length / pageSize),
+      pagination: {
+        page,
+        pageSize,
+        totalCount: urls.length,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
     });
   } catch (error) {
     context.error('Error getting URLs:', error);

@@ -6,7 +6,10 @@ import {
   isValidUrl,
   getUrlPartitionKey,
   responses,
+  buildShortUrl,
+  MAX_URL_LENGTH,
 } from '../utils';
+import { authenticateRequest } from '../auth';
 
 /**
  * POST /api/urls
@@ -17,19 +20,27 @@ export async function createUrl(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   try {
-    // TODO: Get user from auth token
-    const userEmail = 'test@example.com'; // Placeholder until auth is implemented
+    // Authenticate and authorize the request
+    const auth = await authenticateRequest(request.headers.get('Authorization'));
+    if (!auth.success) {
+      return auth.response;
+    }
+    const userEmail = auth.user.email;
 
     // Parse request body
     const body = await request.json();
     const { url } = body as { url?: string };
 
     if (!url) {
-      return responses.badRequest('Missing url field');
+      return responses.badRequest('Missing url field', 'MISSING_URL');
+    }
+
+    if (url.length > MAX_URL_LENGTH) {
+      return responses.badRequest(`URL exceeds maximum length of ${MAX_URL_LENGTH} characters`, 'URL_TOO_LONG');
     }
 
     if (!isValidUrl(url)) {
-      return responses.badRequest('Invalid URL format');
+      return responses.badRequest('Invalid URL format', 'INVALID_URL');
     }
 
     // Ensure tables exist
@@ -70,7 +81,7 @@ export async function createUrl(
       rowKey: id,
       URL: url,
       Owner: userEmail,
-      CreatedDate: now,
+      CreatedAt: now,
       ClickCount: 0,
     });
 
@@ -80,15 +91,15 @@ export async function createUrl(
       partitionKey: userEmail,
       rowKey: id,
       URL: url,
-      CreatedDate: now,
+      CreatedAt: now,
       ClickCount: 0,
     });
 
     return responses.created({
       id,
-      shortUrl: `https://k61.dev/${id}`,
+      shortUrl: buildShortUrl(id),
       url,
-      createdDate: now,
+      createdAt: now,
       clickCount: 0,
     });
   } catch (error) {

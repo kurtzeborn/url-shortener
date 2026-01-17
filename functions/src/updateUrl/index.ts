@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, ensureTableExists, isValidUrl, getUrlPartitionKey, responses } from '../utils';
+import { getTableClient, ensureTableExists, isValidUrl, getUrlPartitionKey, responses, buildShortUrl, MAX_URL_LENGTH } from '../utils';
+import { authenticateRequest } from '../auth';
 
 /**
  * PUT /api/urls/:id
@@ -10,23 +11,31 @@ export async function updateUrl(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   try {
-    // TODO: Get user from auth token
-    const userEmail = 'test@example.com'; // Placeholder until auth is implemented
+    // Authenticate and authorize the request
+    const auth = await authenticateRequest(request.headers.get('Authorization'));
+    if (!auth.success) {
+      return auth.response;
+    }
+    const userEmail = auth.user.email;
 
     const id = request.params.id;
     if (!id) {
-      return responses.badRequest('Missing ID parameter');
+      return responses.badRequest('Missing ID parameter', 'MISSING_ID');
     }
 
     const body = await request.json();
     const { url } = body as { url?: string };
 
     if (!url) {
-      return responses.badRequest('Missing url field');
+      return responses.badRequest('Missing url field', 'MISSING_URL');
+    }
+
+    if (url.length > MAX_URL_LENGTH) {
+      return responses.badRequest(`URL exceeds maximum length of ${MAX_URL_LENGTH} characters`, 'URL_TOO_LONG');
     }
 
     if (!isValidUrl(url)) {
-      return responses.badRequest('Invalid URL format');
+      return responses.badRequest('Invalid URL format', 'INVALID_URL');
     }
 
     // Ensure tables exist
@@ -43,7 +52,7 @@ export async function updateUrl(
       
       // Verify ownership
       if (entity.Owner !== userEmail) {
-        return responses.forbidden('You do not own this URL');
+        return responses.forbidden('You do not own this URL', 'NOT_OWNER');
       }
 
       await urlsClient.updateEntity(
@@ -68,12 +77,12 @@ export async function updateUrl(
 
       return responses.ok({
         id,
-        shortUrl: `https://k61.dev/${id}`,
+        shortUrl: buildShortUrl(id),
         url,
-        updatedDate: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
     } catch (error) {
-      return responses.notFound('URL not found');
+      return responses.notFound('URL not found', 'URL_NOT_FOUND');
     }
   } catch (error) {
     context.error('Error updating URL:', error);

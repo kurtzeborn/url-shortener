@@ -93,31 +93,6 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Extract user email from auth token (simplified - implement proper JWT validation)
- */
-export function getUserFromToken(authHeader: string | null): string | null {
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
-  }
-  // TODO: Implement proper JWT validation with Microsoft OAuth
-  // For now, return null (auth not implemented yet)
-  return null;
-}
-
-/**
- * Check if user is in AllowedUsers table
- */
-export async function isUserAllowed(email: string): Promise<boolean> {
-  try {
-    const client = getTableClient('AllowedUsers');
-    const entity = await client.getEntity('users', email);
-    return !!entity;
-  } catch {
-    return false;
-  }
-}
-
-/**
  * Get partition key for URL (first 2 chars of ID)
  */
 export function getUrlPartitionKey(id: string): string {
@@ -141,34 +116,58 @@ export const responses = {
   noContent: () => ({
     status: 204,
   }),
-  badRequest: (message: string) => ({
+  badRequest: (message: string, code: string = 'BAD_REQUEST') => ({
     status: 400,
-    body: JSON.stringify({ error: message }),
+    body: JSON.stringify({ error: { code, message } }),
     headers: { 'Content-Type': 'application/json' },
   }),
-  unauthorized: (message: string = 'Unauthorized') => ({
+  unauthorized: (message: string = 'Unauthorized', code: string = 'UNAUTHORIZED') => ({
     status: 401,
-    body: JSON.stringify({ error: message }),
+    body: JSON.stringify({ error: { code, message } }),
     headers: { 'Content-Type': 'application/json' },
   }),
-  forbidden: (message: string = 'Forbidden') => ({
+  forbidden: (message: string = 'Forbidden', code: string = 'FORBIDDEN') => ({
     status: 403,
-    body: JSON.stringify({ error: message }),
+    body: JSON.stringify({ error: { code, message } }),
     headers: { 'Content-Type': 'application/json' },
   }),
-  notFound: (message: string = 'Not found') => ({
+  notFound: (message: string = 'Not found', code: string = 'NOT_FOUND') => ({
     status: 404,
-    body: JSON.stringify({ error: message }),
+    body: JSON.stringify({ error: { code, message } }),
     headers: { 'Content-Type': 'application/json' },
   }),
-  conflict: (message: string) => ({
+  conflict: (message: string, code: string = 'CONFLICT') => ({
     status: 409,
-    body: JSON.stringify({ error: message }),
+    body: JSON.stringify({ error: { code, message } }),
     headers: { 'Content-Type': 'application/json' },
   }),
-  serverError: (message: string = 'Internal server error') => ({
+  tooManyRequests: (message: string, code: string = 'RATE_LIMITED') => ({
+    status: 429,
+    body: JSON.stringify({ error: { code, message } }),
+    headers: { 'Content-Type': 'application/json' },
+  }),
+  serverError: (message: string = 'Internal server error', code: string = 'INTERNAL_ERROR') => ({
     status: 500,
-    body: JSON.stringify({ error: message }),
+    body: JSON.stringify({ error: { code, message } }),
     headers: { 'Content-Type': 'application/json' },
   }),
 };
+
+/**
+ * Get the short URL domain from environment or default
+ */
+export function getShortUrlDomain(): string {
+  return process.env.SHORT_URL_DOMAIN || 'k61.dev';
+}
+
+/**
+ * Build a short URL from an ID
+ */
+export function buildShortUrl(id: string): string {
+  return `https://${getShortUrlDomain()}/${id}`;
+}
+
+/**
+ * Maximum allowed URL length (2048 is common browser limit)
+ */
+export const MAX_URL_LENGTH = 2048;

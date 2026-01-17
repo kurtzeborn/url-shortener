@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const API_BASE = '/api'; // Uses Vite proxy in development
 
 function CreateUrl({ onSuccess }) {
+  const { getAccessToken } = useAuth();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,10 +17,12 @@ function CreateUrl({ onSuccess }) {
     setSuccess(null);
 
     try {
+      const token = await getAccessToken();
       const response = await fetch(`${API_BASE}/urls`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ url }),
       });

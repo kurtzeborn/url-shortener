@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
+import { useAuth } from './context/AuthContext';
 import Dashboard from './components/Dashboard';
 import CreateUrl from './components/CreateUrl';
 import Settings from './components/Settings';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: Implement proper auth
+  const { user, isAuthenticated, isAllowed, loading, login, logout } = useAuth();
 
-  const handleLogin = () => {
-    // TODO: Implement Microsoft OAuth login
-    alert('Microsoft OAuth login not yet implemented');
-    setIsLoggedIn(true); // Temporary
-  };
+  // Show loading state
+  if (loading) {
+    return (
+      <div>
+        <header className="header">
+          <div className="header-content">
+            <div className="logo">k61.dev</div>
+          </div>
+        </header>
+        <div className="container">
+          <div className="loading">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentPage('dashboard');
-  };
-
-  if (!isLoggedIn) {
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
     return (
       <div>
         <header className="header">
@@ -32,9 +39,36 @@ function App() {
             <p style={{ marginBottom: '30px', color: '#666' }}>
               Create short, memorable links with analytics and custom aliases.
             </p>
-            <button className="btn btn-primary" onClick={handleLogin}>
+            <button className="btn btn-primary" onClick={login}>
               Login with Microsoft
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied if user is not in AllowedUsers
+  if (isAllowed === false) {
+    return (
+      <div>
+        <header className="header">
+          <div className="header-content">
+            <div className="logo">k61.dev</div>
+            <button className="btn btn-secondary" onClick={logout}>
+              Logout
+            </button>
+          </div>
+        </header>
+        <div className="container">
+          <div className="card" style={{ maxWidth: '500px', margin: '100px auto', textAlign: 'center' }}>
+            <h1 style={{ marginBottom: '20px', color: '#dc3545' }}>Access Denied</h1>
+            <p style={{ marginBottom: '20px', color: '#666' }}>
+              Your account ({user?.email}) is not authorized to use this application.
+            </p>
+            <p style={{ color: '#666' }}>
+              Please contact an existing user to request access.
+            </p>
           </div>
         </div>
       </div>
@@ -68,7 +102,8 @@ function App() {
             >
               Settings
             </button>
-            <button className="btn btn-secondary" onClick={handleLogout}>
+            <span style={{ color: '#666', fontSize: '14px' }}>{user?.email}</span>
+            <button className="btn btn-secondary" onClick={logout}>
               Logout
             </button>
           </nav>

@@ -1,5 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
-import { getTableClient, isValidEmail, responses } from '../utils';
+import { getTableClient, ensureTableExists, isValidEmail, responses } from '../utils';
+import { authenticateRequest } from '../auth';
 
 /**
  * POST /api/users/add
@@ -11,33 +12,36 @@ export async function addUser(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   try {
-    // TODO: Get user from auth token
-    const currentUserEmail = 'test@example.com'; // Placeholder until auth is implemented
-
-    // Verify current user is allowed
-    const allowedUsersClient = getTableClient('AllowedUsers');
-    try {
-      await allowedUsersClient.getEntity('users', currentUserEmail);
-    } catch {
-      return responses.forbidden('You are not authorized to add users');
+    // Authenticate and authorize the request
+    const auth = await authenticateRequest(request.headers.get('Authorization'));
+    if (!auth.success) {
+      return auth.response;
     }
+    const currentUserEmail = auth.user.email;
+
+    // Ensure tables exist
+    await ensureTableExists('AllowedUsers');
+    await ensureTableExists('UserInvites');
+
+    // Get the AllowedUsers client
+    const allowedUsersClient = getTableClient('AllowedUsers');
 
     // Parse request body
     const body = await request.json();
     const { email } = body as { email?: string };
 
     if (!email) {
-      return responses.badRequest('Missing email field');
+      return responses.badRequest('Missing email field', 'MISSING_EMAIL');
     }
 
     if (!isValidEmail(email)) {
-      return responses.badRequest('Invalid email format');
+      return responses.badRequest('Invalid email format', 'INVALID_EMAIL');
     }
 
     // Check if email already exists
     try {
-      await allowedUsersClient.getEntity('users', email);
-      return responses.conflict('Email already exists in allowlist');
+      await allowedUsersClient.getEntity('users', email.toLowerCase());
+      return responses.conflict('Email already exists in allowlist', 'EMAIL_EXISTS');
     } catch {
       // Email doesn't exist - proceed
     }
@@ -55,15 +59,15 @@ export async function addUser(
     }
 
     if (inviteCount >= 10) {
-      return responses.forbidden('Daily invite limit reached (10 per day)');
+      return responses.tooManyRequests('Daily invite limit reached (10 per day)', 'INVITE_LIMIT_REACHED');
     }
 
     // Add user to AllowedUsers
     const now = new Date().toISOString();
     await allowedUsersClient.createEntity({
       partitionKey: 'users',
-      rowKey: email,
-      AddedDate: now,
+      rowKey: email.toLowerCase(),
+      AddedAt: now,
       AddedBy: currentUserEmail,
     });
 
@@ -86,8 +90,8 @@ export async function addUser(
     }
 
     return responses.created({
-      email,
-      addedDate: now,
+      email: email.toLowerCase(),
+      addedAt: now,
       addedBy: currentUserEmail,
       remainingInvites: 10 - (inviteCount + 1),
     });
@@ -100,6 +104,6 @@ export async function addUser(
 app.http('addUser', {
   methods: ['POST'],
   authLevel: 'anonymous',
-  route: 'users/add',
+  route: 'users',
   handler: addUser,
 });

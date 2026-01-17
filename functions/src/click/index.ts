@@ -14,12 +14,12 @@ export async function clickTracker(
     // Verify internal API key
     const apiKey = request.headers.get('X-Internal-Key');
     if (apiKey !== process.env.INTERNAL_API_KEY) {
-      return responses.unauthorized('Invalid API key');
+      return responses.unauthorized('Invalid API key', 'INVALID_API_KEY');
     }
 
     const id = request.params.id;
     if (!id) {
-      return responses.badRequest('Missing ID parameter');
+      return responses.badRequest('Missing ID parameter', 'MISSING_ID');
     }
 
     // Ensure tables exist
@@ -64,10 +64,10 @@ export async function clickTracker(
         }
       }
 
-      return responses.ok({ success: true, clickCount: currentCount + 1 });
+      return responses.ok({ clickCount: currentCount + 1 });
     } catch (error) {
       context.error('Error updating click count:', error);
-      return responses.notFound('URL not found');
+      return responses.notFound('URL not found', 'URL_NOT_FOUND');
     }
   } catch (error) {
     context.error('Error in click tracker:', error);

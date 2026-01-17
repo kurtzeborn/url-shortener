@@ -5,8 +5,10 @@
 
 // Import all function handlers to register them
 import './addUser';
+import './auth';
 import './click';
 import './createUrl';
 import './deleteUrl';
+import './getUrl';
 import './getUrls';
 import './updateUrl';
