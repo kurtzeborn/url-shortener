@@ -3,6 +3,7 @@
  */
 
 import { TableClient, TableServiceClient } from '@azure/data-tables';
+import { customAlphabet } from 'nanoid';
 
 // Cache for initialized table clients
 const tableClients: Map<string, TableClient> = new Map();
@@ -49,8 +50,9 @@ export async function ensureTableExists(tableName: string): Promise<void> {
   tablesInitialized.add(tableName);
 }
 
-// Base62 character set for ID generation
-const BASE62_CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+// nanoid with base62 alphabet (cryptographically secure)
+const BASE62_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const nanoid = customAlphabet(BASE62_ALPHABET);
 
 // Profanity filter for ID generation
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -64,7 +66,7 @@ function isInappropriateId(id: string): boolean {
 }
 
 /**
- * Generate a random base62 ID (filters inappropriate content)
+ * Generate a random base62 ID using nanoid (filters inappropriate content)
  */
 export function generateId(length: number = 4): string {
   let id = '';
@@ -72,10 +74,7 @@ export function generateId(length: number = 4): string {
   const maxAttempts = 100;
   
   do {
-    id = '';
-    for (let i = 0; i < length; i++) {
-      id += BASE62_CHARS[Math.floor(Math.random() * BASE62_CHARS.length)];
-    }
+    id = nanoid(length);
     attempts++;
   } while (isInappropriateId(id) && attempts < maxAttempts);
   
