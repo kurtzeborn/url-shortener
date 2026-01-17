@@ -32,7 +32,10 @@ function Settings() {
       const data = text ? JSON.parse(text) : {};
 
       if (!response.ok) {
-        throw new Error(data.error?.message || data.error || 'Failed to add user');
+        const errorMessage = typeof data.error === 'string' 
+          ? data.error 
+          : data.error?.message || 'Failed to add user';
+        throw new Error(errorMessage);
       }
 
       setSuccess(`User added! Remaining invites today: ${data.remainingInvites}`);
