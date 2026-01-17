@@ -1,97 +1,101 @@
 # k61.dev URL Shortener
 
-A modern, serverless URL shortener built on Azure and Cloudflare, providing lightning-fast redirects with comprehensive analytics.
-
-## Features
-
-- ⚡ **Sub-10ms redirects** via Cloudflare Workers at the edge
-- 🔐 **Microsoft account authentication** with allowlist-based access control
-- 📊 **Analytics dashboard** with click tracking, sorting, and filtering
-- 🎯 **Short URLs** - Random 4-character base62 IDs (14.7M capacity)
-- 🆓 **100% free tier** - Cloudflare Workers + Azure free tier
-- 👥 **User management** - Self-service invitations with rate limiting
+A serverless URL shortener built on Azure and Cloudflare with sub-10ms edge redirects.
 
 ## Architecture
 
-- **`k61.dev/<id>`** - Cloudflare Worker handles redirects at edge
-- **`url.k61.dev`** - Azure Static Web App (dashboard, management UI)
-- **`www.k61.dev`** - Generic landing page for all k61.dev projects
-- **Backend** - Azure Functions (API, auth, CRUD)
-- **Storage** - Azure Table Storage (URLs, users, analytics)
+```mermaid
+flowchart LR
+    subgraph Internet
+        User([User])
+    end
+    
+    subgraph Cloudflare
+        Worker[Cloudflare Worker<br/>k61.dev/*]
+    end
+    
+    subgraph Azure
+        SWA1[Static Web App<br/>url.k61.dev]
+        SWA2[Static Web App<br/>www.k61.dev]
+        Functions[Azure Functions<br/>API]
+        Storage[(Table Storage<br/>URLs, Users)]
+    end
+    
+    User -->|k61.dev/abc| Worker
+    Worker -->|lookup| Storage
+    Worker -.->|track click| Functions
+    Worker -->|302 redirect| User
+    
+    User -->|url.k61.dev| SWA1
+    SWA1 -->|API calls| Functions
+    Functions -->|CRUD| Storage
+    
+    User -->|www.k61.dev| SWA2
+```
 
-## Quick Links
+## Features
 
-- [Full Project Plan](PLAN.md) - Detailed requirements and architecture
-- [Setup Guide](#setup) - Step-by-step deployment instructions
-- [Development Guide](#development) - Local development setup
+- ⚡ **Sub-10ms redirects** via Cloudflare Workers edge network
+- 🔐 **Microsoft account auth** with allowlist access control
+- 📊 **Dashboard** with click tracking, sorting, pagination
+- 🎯 **Short 4-char IDs** - 14.7M capacity (base62)
+- 🆓 **Free tier** - All services within free limits
 
 ## Project Structure
 
 ```
-url-shortener/
-├── workers/          # Cloudflare Worker for redirects
-├── functions/        # Azure Functions (API backend)
-├── web/              # Frontend (url.k61.dev)
-├── landing/          # Landing page (www.k61.dev)
-├── tests/            # Unit and integration tests
-└── docs/             # Documentation and screenshots
+├── workers/      # Cloudflare Worker (redirects)
+├── functions/    # Azure Functions (API)
+├── web/          # Dashboard app (url.k61.dev)
+├── landing/      # Landing page (www.k61.dev)
+└── docs/         # Documentation
 ```
-
-## Tech Stack
-
-- **Edge**: Cloudflare Workers (redirects)
-- **Frontend**: Azure Static Web Apps (React or Vanilla JS)
-- **Backend**: Azure Functions (Node.js/TypeScript)
-- **Database**: Azure Table Storage
-- **Auth**: Microsoft OAuth 2.0
-- **CI/CD**: GitHub Actions
-
-## Setup
-
-See [PLAN.md - Bootstrap Process](PLAN.md#bootstrap-process) for detailed setup instructions.
-
-### Prerequisites
-
-- Azure subscription (free tier)
-- Cloudflare account (free tier)
-- GitHub account
-- k61.dev domain configured in Namecheap
-
-### Quick Start
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/kurtzeborn/url-shortener.git
-   cd url-shortener
-   ```
-
-2. **Configure Cloudflare** (see PLAN.md for details)
-   - Add k61.dev to Cloudflare
-   - Deploy Worker
-   - Configure DNS
-
-3. **Configure Azure** (see PLAN.md for details)
-   - Create Storage Account
-   - Create Function App
-   - Create Static Web Apps
-
-4. **Bootstrap first user** (see PLAN.md for details)
-   - Add your email to AllowedUsers table via Azure Portal
 
 ## Development
 
-Coming soon...
+```bash
+# Install dependencies
+npm install
 
-## Testing
+# Run tests
+npm test
 
-Coming soon...
+# Run linter
+npm run lint
+```
+
+### Local Development
+
+```bash
+# Functions (requires Azure Functions Core Tools)
+cd functions && npm start
+
+# Web dashboard
+cd web && npm run dev
+
+# Landing page
+cd landing && npm run dev
+```
 
 ## Deployment
 
-GitHub Actions will automatically deploy:
-- Cloudflare Worker on push to `main`
-- Azure Functions on push to `main`
-- Static Web Apps on push to `main`
+All deployments are automatic via GitHub Actions on push to `main`:
+
+| Component | Workflow | Destination |
+|-----------|----------|-------------|
+| Worker | deploy-worker.yml | Cloudflare Workers |
+| Functions | deploy-functions.yml | Azure Functions |
+| Web | deploy-web.yml | Azure Static Web Apps |
+| Landing | deploy-landing.yml | Azure Static Web Apps |
+
+## Data Model
+
+**Azure Table Storage tables:**
+
+- `URLs` - Short ID → destination URL mapping
+- `UserURLs` - Per-user URL index for dashboard
+- `AllowedUsers` - Email allowlist
+- `UserInvites` - Daily invite rate limiting
 
 ## License
 
