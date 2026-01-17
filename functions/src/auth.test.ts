@@ -8,8 +8,7 @@ import {
   isUserAllowed, 
   getAllowedUserInfo,
   authenticateRequest,
-  validateToken,
-  DecodedToken 
+  validateToken
 } from './auth';
 import * as utils from './utils';
 
