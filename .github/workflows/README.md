@@ -11,6 +11,7 @@ Deploys Cloudflare Worker on changes to `workers/` directory.
 - `CLOUDFLARE_API_TOKEN` - Cloudflare API token with Workers deploy permissions
 - `AZURE_STORAGE_ACCOUNT` - Azure storage account name
 - `AZURE_STORAGE_KEY` - Azure storage account key
+- `AZURE_API_URL` - Azure Functions API URL (e.g., https://my-func.azurewebsites.net)
 - `INTERNAL_API_KEY` - Secure random key for internal API
 
 ### deploy-functions.yml

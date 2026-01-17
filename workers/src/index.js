@@ -114,12 +114,13 @@ async function lookupUrl(id, env) {
  */
 async function trackClick(id, env) {
   const apiKey = env.INTERNAL_API_KEY;
-  if (!apiKey) {
-    return; // No API key configured, skip tracking
+  const apiUrl = env.AZURE_API_URL;
+  if (!apiKey || !apiUrl) {
+    return; // No API credentials configured, skip tracking
   }
 
   try {
-    await fetch(`${APP_URL}/api/click/${id}`, {
+    await fetch(`${apiUrl}/api/click/${id}`, {
       method: 'POST',
       headers: {
         'X-Internal-Key': apiKey,

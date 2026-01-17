@@ -6,6 +6,7 @@ compatibility_date = "2024-01-01"
 # For local dev, create a .dev.vars file with:
 # AZURE_STORAGE_ACCOUNT=devstoreaccount1
 # AZURE_STORAGE_KEY=your-key
+# AZURE_API_URL=http://localhost:7071
 # INTERNAL_API_KEY=dev-api-key
 
 [env.production]
