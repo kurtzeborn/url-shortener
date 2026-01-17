@@ -154,26 +154,23 @@ function Dashboard() {
             <ul className="url-list">
               {urls.map((url) => (
                 <li key={url.id} className="url-item">
-                  <div className="url-info">
-                    <div className="url-short">{url.shortUrl}</div>
-                    <div className="url-long">{url.url}</div>
-                    <div className="url-stats">
-                      <span>🔗 {url.clickCount} clicks</span>
-                      <span>📅 {new Date(url.createdAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
+                  <div className="url-short">{url.shortUrl}</div>
+                  <div className="url-long">{url.url}</div>
+                  <div className="url-stat">🔗 {url.clickCount}</div>
+                  <div className="url-stat">📅 {new Date(url.createdAt).toLocaleDateString()}</div>
                   <div className="url-actions">
                     <button
-                      className="btn btn-secondary"
+                      className="btn btn-sm"
                       onClick={() => copyToClipboard(url.shortUrl)}
+                      title="Copy"
                     >
-                      Copy
+                      📋
                     </button>
-                    <button className="btn btn-secondary" onClick={() => startEdit(url)}>
-                      Edit
+                    <button className="btn btn-sm" onClick={() => startEdit(url)} title="Edit">
+                      ✏️
                     </button>
-                    <button className="btn btn-danger" onClick={() => handleDelete(url.id)}>
-                      Delete
+                    <button className="btn btn-sm btn-danger" onClick={() => handleDelete(url.id)} title="Delete">
+                      🗑️
                     </button>
                   </div>
                 </li>
