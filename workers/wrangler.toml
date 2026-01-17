@@ -1,6 +1,7 @@
 name = "k61-dev-redirector"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
+account_id = "4ea5db67f7efd8ffd612c68abc7bd48a"
 
 # Environment variables (set via CLI or dashboard)
 # For local dev, create a .dev.vars file with:
