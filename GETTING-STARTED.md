@@ -16,7 +16,7 @@ This guide will walk you through setting up the URL shortener from scratch.
 ```bash
 git clone https://github.com/kurtzeborn/url-shortener.git
 cd url-shortener
-npm install  # Install root dependencies
+npm ci  # Install dependencies from lock file
 ```
 
 ## Step 2: Azure Setup
@@ -131,10 +131,11 @@ Add these DNS records in Cloudflare:
 
 Add these secrets in GitHub repository settings:
 
-### Cloudflare
+### Cloudflare Worker
 - `CLOUDFLARE_API_TOKEN` - API token from Step 3.3
 - `AZURE_STORAGE_ACCOUNT` - Storage account name (k61urlshortener)
-- `AZURE_STORAGE_KEY` - From Azure Portal → Storage Account → Access Keys
+- `AZURE_STORAGE_SAS` - SAS token from Azure Portal → Storage Account → Shared access signature
+- `AZURE_API_URL` - Azure Functions URL (e.g., https://k61-url-functions.azurewebsites.net)
 - `INTERNAL_API_KEY` - Generate a random secure key (e.g., `openssl rand -hex 32`)
 
 ### Azure Functions
@@ -144,6 +145,8 @@ Add these secrets in GitHub repository settings:
 ### Azure Static Web Apps
 - `AZURE_STATIC_WEB_APPS_API_TOKEN_WEB` - Token from Step 2.5
 - `AZURE_STATIC_WEB_APPS_API_TOKEN_LANDING` - Token from Step 2.5
+- `VITE_MICROSOFT_CLIENT_ID` - Microsoft Entra app registration client ID
+- `VITE_API_URL` - Azure Functions URL (e.g., https://k61-url-functions.azurewebsites.net)
 
 ## Step 5: Local Development
 
@@ -232,16 +235,16 @@ For each Static Web App:
 
 ## Next Steps
 
-- [ ] Implement Microsoft OAuth authentication
-- [ ] Add comprehensive tests
+- [x] ~~Implement Microsoft OAuth authentication~~ (Done)
+- [x] ~~Add comprehensive tests~~ (Done - 51 tests)
 - [ ] Set up monitoring/alerts
-- [ ] Add URL analytics dashboard
-- [ ] Implement custom aliases
-- [ ] Add QR code generation
+- [ ] [Add URL analytics dashboard](https://github.com/kurtzeborn/url-shortener/issues/4)
+- [ ] [Implement custom aliases](https://github.com/kurtzeborn/url-shortener/issues/3)
+- [ ] [Add QR code generation](https://github.com/kurtzeborn/url-shortener/issues/8)
 
 ## Support
 
 For issues, check:
 - GitHub Issues: https://github.com/kurtzeborn/url-shortener/issues
-- PLAN.md for architecture details
+- [docs/archive/PLAN.md](docs/archive/PLAN.md) for original architecture details
 - Individual component READMEs
