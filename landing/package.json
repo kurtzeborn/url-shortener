@@ -1,0 +1,13 @@
+{
+  "name": "url-shortener-landing",
+  "version": "0.1.0",
+  "description": "Landing page for www.k61.dev",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

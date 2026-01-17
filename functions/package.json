@@ -1,0 +1,21 @@
+{
+  "name": "url-shortener-functions",
+  "version": "0.1.0",
+  "description": "Azure Functions API for URL shortener",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "func start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.2.2",
+    "@azure/functions": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/azure-functions": "^4.0.0",
+    "azure-functions-core-tools": "^4.0.0",
+    "typescript": "^5.3.0"
+  }
+}

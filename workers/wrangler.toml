@@ -1,0 +1,15 @@
+name = "k61-dev-redirector"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables (set via CLI or dashboard)
+# AZURE_STORAGE_ACCOUNT = "your-storage-account"
+# AZURE_STORAGE_KEY = "your-storage-key"
+# INTERNAL_API_KEY = "generate-a-secure-random-key"
+
+[env.production]
+name = "k61-dev-redirector"
+route = "k61.dev/*"
+
+[env.development]
+name = "k61-dev-redirector-dev"

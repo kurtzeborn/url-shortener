@@ -1,0 +1,18 @@
+{
+  "name": "url-shortener-worker",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker for k61.dev redirects",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.2.2"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0",
+    "vitest": "^1.0.0"
+  }
+}
