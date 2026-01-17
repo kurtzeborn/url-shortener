@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-
-// API base URL - use environment variable in production
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import { API_BASE, parseApiResponse, getErrorMessage } from '../api';
 
 function Settings() {
   const { getAccessToken } = useAuth();
@@ -28,14 +26,10 @@ function Settings() {
         body: JSON.stringify({ email }),
       });
 
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
+      const { data, ok } = await parseApiResponse(response);
 
-      if (!response.ok) {
-        const errorMessage = typeof data.error === 'string' 
-          ? data.error 
-          : data.error?.message || 'Failed to add user';
-        throw new Error(errorMessage);
+      if (!ok) {
+        throw new Error(getErrorMessage(data, 'Failed to add user'));
       }
 
       setSuccess(`User added! Remaining invites today: ${data.remainingInvites}`);

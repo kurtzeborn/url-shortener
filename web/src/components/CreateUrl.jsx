@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-
-// API base URL - use environment variable in production
-const API_BASE = import.meta.env.VITE_API_URL || '';
+import { API_BASE, parseApiResponse, getErrorMessage } from '../api';
 
 function CreateUrl({ onSuccess }) {
   const { getAccessToken } = useAuth();
@@ -28,12 +26,11 @@ function CreateUrl({ onSuccess }) {
         body: JSON.stringify({ url }),
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to create URL');
-      }
+      const { data, ok } = await parseApiResponse(response);
 
-      const data = await response.json();
+      if (!ok) {
+        throw new Error(getErrorMessage(data, 'Failed to create URL'));
+      }
       setSuccess(`Created: ${data.shortUrl}`);
       setUrl('');
 

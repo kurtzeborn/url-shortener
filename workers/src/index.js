@@ -119,5 +119,3 @@ async function trackClick(id, env) {
     console.error('Error tracking click:', error);
   }
 }
-
-
