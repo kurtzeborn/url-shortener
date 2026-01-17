@@ -52,14 +52,33 @@ export async function ensureTableExists(tableName: string): Promise<void> {
 // Base62 character set for ID generation
 const BASE62_CHARS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+// Profanity filter for ID generation
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const leoProfanity = require('leo-profanity');
+
 /**
- * Generate a random base62 ID
+ * Check if an ID contains inappropriate content
+ */
+function isInappropriateId(id: string): boolean {
+  return leoProfanity.check(id);
+}
+
+/**
+ * Generate a random base62 ID (filters inappropriate content)
  */
 export function generateId(length: number = 4): string {
   let id = '';
-  for (let i = 0; i < length; i++) {
-    id += BASE62_CHARS[Math.floor(Math.random() * BASE62_CHARS.length)];
-  }
+  let attempts = 0;
+  const maxAttempts = 100;
+  
+  do {
+    id = '';
+    for (let i = 0; i < length; i++) {
+      id += BASE62_CHARS[Math.floor(Math.random() * BASE62_CHARS.length)];
+    }
+    attempts++;
+  } while (isInappropriateId(id) && attempts < maxAttempts);
+  
   return id;
 }
 

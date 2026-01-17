@@ -5,7 +5,7 @@
 
 // Import all function handlers to register them
 import './addUser';
-import './auth';
+import './auth/index';  // Auth check endpoint
 import './click';
 import './createUrl';
 import './deleteUrl';

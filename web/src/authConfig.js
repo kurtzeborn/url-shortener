@@ -19,7 +19,7 @@ const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID || 'YOUR_CLIENT_ID_HER
 export const msalConfig = {
   auth: {
     clientId,
-    authority: 'https://login.microsoftonline.com/consumers', // Personal accounts only
+    authority: 'https://login.microsoftonline.com/common', // Multi-tenant + personal accounts
     redirectUri: window.location.origin,
     postLogoutRedirectUri: window.location.origin,
   },

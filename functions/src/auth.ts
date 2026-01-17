@@ -6,9 +6,9 @@ import * as jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import { getTableClient, ensureTableExists } from './utils';
 
-// JWKS client for fetching Microsoft's public keys
+// JWKS client for fetching Microsoft's public keys (common endpoint for multi-tenant)
 const client = jwksClient({
-  jwksUri: 'https://login.microsoftonline.com/consumers/discovery/v2.0/keys',
+  jwksUri: 'https://login.microsoftonline.com/common/discovery/v2.0/keys',
   cache: true,
   cacheMaxAge: 86400000, // 24 hours
 });
@@ -37,24 +37,39 @@ export interface DecodedToken {
  */
 export function validateToken(token: string): Promise<DecodedToken> {
   return new Promise((resolve, reject) => {
+    // First decode without verification to check issuer format
+    const unverified = jwt.decode(token, { complete: true }) as jwt.Jwt | null;
+    if (!unverified) {
+      reject(new Error('Invalid token format'));
+      return;
+    }
+
+    const payload = unverified.payload as jwt.JwtPayload;
+    const issuer = payload.iss;
+
+    // Validate issuer format (multi-tenant + personal accounts)
+    if (!issuer || !issuer.startsWith('https://login.microsoftonline.com/') || !issuer.endsWith('/v2.0')) {
+      reject(new Error('Invalid token issuer'));
+      return;
+    }
+
     jwt.verify(
       token,
       getKey,
       {
         algorithms: ['RS256'],
-        issuer: 'https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0', // Consumer tenant
-        // Note: audience validation should match your client ID
+        issuer: issuer, // Use the issuer from the token
       },
-      (err, decoded) => {
+      (err: jwt.VerifyErrors | null, decoded: jwt.JwtPayload | string | undefined) => {
         if (err) {
           reject(err);
           return;
         }
 
-        const payload = decoded as jwt.JwtPayload;
+        const verifiedPayload = decoded as jwt.JwtPayload;
         
         // Extract email from various possible claims
-        const email = payload.email || payload.preferred_username || payload.upn;
+        const email = verifiedPayload.email || verifiedPayload.preferred_username || verifiedPayload.upn;
         
         if (!email) {
           reject(new Error('No email claim found in token'));
@@ -63,9 +78,9 @@ export function validateToken(token: string): Promise<DecodedToken> {
 
         resolve({
           email: email.toLowerCase(),
-          name: payload.name,
-          oid: payload.oid,
-          sub: payload.sub,
+          name: verifiedPayload.name,
+          oid: verifiedPayload.oid,
+          sub: verifiedPayload.sub,
         });
       }
     );
