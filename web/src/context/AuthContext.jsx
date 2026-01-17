@@ -4,6 +4,9 @@ import { loginRequest } from '../authConfig';
 
 const AuthContext = createContext(null);
 
+// API base URL - use environment variable in production, empty string for local dev with proxy
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export function AuthProvider({ children }) {
   const { instance, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
@@ -16,7 +19,7 @@ export function AuthProvider({ children }) {
 
   const checkUserAllowed = useCallback(async (email) => {
     try {
-      const response = await fetch(`/api/auth/check?email=${encodeURIComponent(email)}`);
+      const response = await fetch(`${API_BASE_URL}/api/auth/check?email=${encodeURIComponent(email)}`);
       if (response.ok) {
         const data = await response.json();
         setIsAllowed(data.allowed);
