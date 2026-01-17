@@ -29,8 +29,8 @@ export default {
       const targetUrl = await lookupUrl(id, env);
 
       if (targetUrl) {
-        // Fire-and-forget click tracking (don't await)
-        trackClick(id, env).catch(() => {}); // Ignore errors
+        // Fire-and-forget click tracking using waitUntil to ensure it completes
+        ctx.waitUntil(trackClick(id, env));
 
         // Redirect to target URL
         return Response.redirect(targetUrl, 302);
@@ -102,20 +102,24 @@ async function lookupUrl(id, env) {
 async function trackClick(id, env) {
   const apiKey = env.INTERNAL_API_KEY;
   const apiUrl = env.AZURE_API_URL;
+  
+  console.log(`trackClick: id=${id}, apiUrl=${apiUrl}, hasKey=${!!apiKey}`);
+  
   if (!apiKey || !apiUrl) {
-    return; // No API credentials configured, skip tracking
+    console.log('trackClick: Missing credentials, skipping');
+    return;
   }
 
   try {
-    await fetch(`${apiUrl}/api/click/${id}`, {
+    const response = await fetch(`${apiUrl}/api/click/${id}`, {
       method: 'POST',
       headers: {
         'X-Internal-Key': apiKey,
         'Content-Type': 'application/json',
       },
     });
+    console.log(`trackClick: Response status=${response.status}`);
   } catch (error) {
-    // Silently fail - don't impact redirects
     console.error('Error tracking click:', error);
   }
 }
