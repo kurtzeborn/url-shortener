@@ -25,4 +25,20 @@ describe('getErrorMessage', () => {
   it('handles null error object', () => {
     expect(getErrorMessage({ error: null })).toBe('An error occurred');
   });
+
+  it('handles undefined data', () => {
+    expect(getErrorMessage(undefined)).toBe('An error occurred');
+  });
+
+  it('handles null data', () => {
+    expect(getErrorMessage(null)).toBe('An error occurred');
+  });
+
+  it('handles top-level message property', () => {
+    expect(getErrorMessage({ message: 'Top level message' })).toBe('Top level message');
+  });
+
+  it('returns fallback when message is not a string', () => {
+    expect(getErrorMessage({ error: { code: 'ERR', message: { nested: 'object' } } })).toBe('An error occurred');
+  });
 });

@@ -23,8 +23,19 @@ export async function parseApiResponse(response) {
  * @returns {string}
  */
 export function getErrorMessage(data, fallback = 'An error occurred') {
-  if (typeof data.error === 'string') {
+  // Handle string error directly
+  if (typeof data?.error === 'string') {
     return data.error;
   }
-  return data.error?.message || fallback;
+  // Handle error object with message property
+  if (data?.error?.message) {
+    return typeof data.error.message === 'string' 
+      ? data.error.message 
+      : fallback;
+  }
+  // Handle top-level message property
+  if (typeof data?.message === 'string') {
+    return data.message;
+  }
+  return fallback;
 }
