@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { API_BASE, parseApiResponse, getErrorMessage } from '../api';
+import { useApi } from '../hooks/useApi';
 
 function Settings() {
-  const { getAccessToken } = useAuth();
+  const { post } = useApi();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,22 +15,7 @@ function Settings() {
     setSuccess(null);
 
     try {
-      const token = await getAccessToken();
-      const response = await fetch(`${API_BASE}/api/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const { data, ok } = await parseApiResponse(response);
-
-      if (!ok) {
-        throw new Error(getErrorMessage(data, 'Failed to add user'));
-      }
-
+      const data = await post('/api/users', { email });
       setSuccess(`User added! Remaining invites today: ${data.remainingInvites}`);
       setEmail('');
     } catch (err) {

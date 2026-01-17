@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { API_BASE, parseApiResponse, getErrorMessage } from '../api';
+import { useApi } from '../hooks/useApi';
 
 function CreateUrl({ onSuccess }) {
-  const { getAccessToken } = useAuth();
+  const { post } = useApi();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -16,21 +15,7 @@ function CreateUrl({ onSuccess }) {
     setSuccess(null);
 
     try {
-      const token = await getAccessToken();
-      const response = await fetch(`${API_BASE}/api/urls`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      const { data, ok } = await parseApiResponse(response);
-
-      if (!ok) {
-        throw new Error(getErrorMessage(data, 'Failed to create URL'));
-      }
+      const data = await post('/api/urls', { url });
       setSuccess(`Created: ${data.shortUrl}`);
       setUrl('');
 

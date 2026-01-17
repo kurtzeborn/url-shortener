@@ -251,3 +251,64 @@ code {
   max-width: 90%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .url-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 15px;
+  }
+
+  .url-short {
+    font-size: 16px;
+  }
+
+  .url-long {
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  .url-stat {
+    display: inline-block;
+    margin-right: 15px;
+  }
+
+  .url-actions {
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .pagination .btn {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .modal {
+    min-width: unset;
+    width: 95%;
+    margin: 10px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+}

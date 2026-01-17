@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { API_BASE, parseApiResponse, getErrorMessage } from '../api';
+import { useApi } from '../hooks/useApi';
 
 function Dashboard() {
-  const { getAccessToken } = useAuth();
+  const { get, put, del } = useApi();
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,21 +18,7 @@ function Dashboard() {
     setError(null);
 
     try {
-      const token = await getAccessToken();
-      const response = await fetch(
-        `${API_BASE}/api/urls?page=${page}&pageSize=10&sortBy=${sortBy}&sortOrder=${sortOrder}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch URLs');
-      }
-
-      const data = await response.json();
+      const data = await get(`/api/urls?page=${page}&pageSize=10&sortBy=${sortBy}&sortOrder=${sortOrder}`);
       setUrls(data.urls);
       setTotalPages(data.pagination?.totalPages || data.totalPages || 1);
     } catch (err) {
@@ -41,7 +26,7 @@ function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [getAccessToken, page, sortBy, sortOrder]);
+  }, [get, page, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchUrls();
@@ -53,19 +38,7 @@ function Dashboard() {
     }
 
     try {
-      const token = await getAccessToken();
-      const response = await fetch(`${API_BASE}/api/urls/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete URL');
-      }
-
-      // Refresh list
+      await del(`/api/urls/${id}`);
       fetchUrls();
     } catch (err) {
       alert('Error deleting URL: ' + err.message);
@@ -91,22 +64,7 @@ function Dashboard() {
     if (!editingUrl) return;
 
     try {
-      const token = await getAccessToken();
-      const response = await fetch(`${API_BASE}/api/urls/${editingUrl.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ url: editValue }),
-      });
-
-      const { data, ok } = await parseApiResponse(response);
-
-      if (!ok) {
-        throw new Error(getErrorMessage(data, 'Failed to update URL'));
-      }
-
+      await put(`/api/urls/${editingUrl.id}`, { url: editValue });
       cancelEdit();
       fetchUrls();
     } catch (err) {
