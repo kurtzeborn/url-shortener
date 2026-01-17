@@ -155,20 +155,23 @@ code {
   gap: 5px;
 }
 
-.btn-sm {
-  padding: 5px 8px;
+.btn-icon {
+  padding: 6px 10px;
   font-size: 14px;
-  background: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: #666;
   cursor: pointer;
+  border-radius: 4px;
 }
 
-.btn-sm:hover {
-  background: #e0e0e0;
+.btn-icon:hover {
+  background: #f0f0f0;
+  color: #0066cc;
 }
 
-.btn-sm.btn-danger:hover {
+.btn-icon-danger:hover {
+  color: #dc3545;
   background: #ffebee;
 }
 

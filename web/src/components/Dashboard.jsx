@@ -160,17 +160,17 @@ function Dashboard() {
                   <div className="url-stat">📅 {new Date(url.createdAt).toLocaleDateString()}</div>
                   <div className="url-actions">
                     <button
-                      className="btn btn-sm"
+                      className="btn btn-icon"
                       onClick={() => copyToClipboard(url.shortUrl)}
                       title="Copy"
                     >
-                      📋
+                      <i className="fa fa-copy"></i>
                     </button>
-                    <button className="btn btn-sm" onClick={() => startEdit(url)} title="Edit">
-                      ✏️
+                    <button className="btn btn-icon" onClick={() => startEdit(url)} title="Edit">
+                      <i className="fa fa-pencil"></i>
                     </button>
-                    <button className="btn btn-sm btn-danger" onClick={() => handleDelete(url.id)} title="Delete">
-                      🗑️
+                    <button className="btn btn-icon btn-icon-danger" onClick={() => handleDelete(url.id)} title="Delete">
+                      <i className="fa fa-trash-o"></i>
                     </button>
                   </div>
                 </li>
