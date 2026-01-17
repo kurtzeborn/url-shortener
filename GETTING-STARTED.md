@@ -88,21 +88,13 @@ az staticwebapp create \
   --resource-group url-shortener-rg \
   --location eastus2
 
-# For www.k61.dev (landing page)
-az staticwebapp create \
-  --name k61-landing \
-  --resource-group url-shortener-rg \
-  --location eastus2
-
-# Get deployment tokens (save for GitHub secrets)
+# Get deployment token (save for GitHub secrets)
 az staticwebapp secrets list \
   --name k61-url-web \
   --resource-group url-shortener-rg
-
-az staticwebapp secrets list \
-  --name k61-landing \
-  --resource-group url-shortener-rg
 ```
+
+> **Note:** The www.k61.dev landing page is in a [separate repo](https://github.com/kurtzeborn/k61.dev).
 
 ## Step 3: Cloudflare Setup
 
@@ -144,7 +136,6 @@ Add these secrets in GitHub repository settings:
 
 ### Azure Static Web Apps
 - `AZURE_STATIC_WEB_APPS_API_TOKEN_WEB` - Token from Step 2.5
-- `AZURE_STATIC_WEB_APPS_API_TOKEN_LANDING` - Token from Step 2.5
 - `VITE_MICROSOFT_CLIENT_ID` - Microsoft Entra app registration client ID
 - `VITE_API_URL` - Azure Functions URL (e.g., https://k61-url-functions.azurewebsites.net)
 
@@ -191,7 +182,6 @@ GitHub Actions will automatically deploy:
 - Cloudflare Worker
 - Azure Functions
 - Web App (url.k61.dev)
-- Landing Page (www.k61.dev)
 
 ## Step 7: Configure Custom Domains
 

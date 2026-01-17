@@ -15,8 +15,7 @@ flowchart LR
     end
     
     subgraph Azure
-        SWA1[Static Web App<br/>url.k61.dev]
-        SWA2[Static Web App<br/>www.k61.dev]
+        SWA[Static Web App<br/>url.k61.dev]
         Functions[Azure Functions<br/>API]
         Storage[(Table Storage<br/>URLs, Users)]
     end
@@ -26,11 +25,9 @@ flowchart LR
     Worker -.->|track click| Functions
     Worker -->|302 redirect| User
     
-    User -->|url.k61.dev| SWA1
-    SWA1 -->|API calls| Functions
+    User -->|url.k61.dev| SWA
+    SWA -->|API calls| Functions
     Functions -->|CRUD| Storage
-    
-    User -->|www.k61.dev| SWA2
 ```
 
 ## Features
@@ -47,7 +44,10 @@ flowchart LR
 ├── workers/      # Cloudflare Worker (redirects)
 ├── functions/    # Azure Functions (API)
 ├── web/          # Dashboard app (url.k61.dev)
-├── landing/      # Landing page (www.k61.dev)
+└── docs/         # Documentation
+```
+
+> **Note:** The www.k61.dev landing page is in a [separate repo](https://github.com/kurtzeborn/k61.dev).
 └── docs/         # Documentation
 ```
 
@@ -72,9 +72,6 @@ cd functions && npm start
 
 # Web dashboard
 cd web && npm run dev
-
-# Landing page
-cd landing && npm run dev
 ```
 
 ## Deployment
@@ -86,7 +83,6 @@ All deployments are automatic via GitHub Actions on push to `main`:
 | Worker | deploy-worker.yml | Cloudflare Workers |
 | Functions | deploy-functions.yml | Azure Functions |
 | Web | deploy-web.yml | Azure Static Web Apps |
-| Landing | deploy-landing.yml | Azure Static Web Apps |
 
 ## Data Model
 
