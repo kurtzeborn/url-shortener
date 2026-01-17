@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./web
-        run: npm install
+        run: npm ci
 
       - name: Build
         working-directory: ./web

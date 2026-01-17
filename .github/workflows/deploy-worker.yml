@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./workers
-        run: npm install
+        run: npm ci
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
