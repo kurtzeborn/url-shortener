@@ -156,8 +156,8 @@ function Dashboard() {
                 <li key={url.id} className="url-item">
                   <div className="url-short">{url.shortUrl}</div>
                   <div className="url-long">{url.url}</div>
-                  <div className="url-stat">🔗 {url.clickCount}</div>
-                  <div className="url-stat">📅 {new Date(url.createdAt).toLocaleDateString()}</div>
+                  <div className="url-stat"><i className="fa fa-mouse-pointer"></i> {url.clickCount}</div>
+                  <div className="url-stat"><i className="fa fa-calendar"></i> {new Date(url.createdAt).toLocaleDateString()}</div>
                   <div className="url-actions">
                     <button
                       className="btn btn-icon"

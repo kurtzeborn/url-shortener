@@ -73,7 +73,7 @@ function CreateUrl({ onSuccess }) {
       </div>
 
       <div className="card" style={{ maxWidth: '600px', marginTop: '20px' }}>
-        <h3 style={{ marginBottom: '10px' }}>ℹ️ How it works</h3>
+        <h3 style={{ marginBottom: '10px' }}><i className="fa fa-info-circle"></i> How it works</h3>
         <ul style={{ paddingLeft: '20px', color: '#666' }}>
           <li>Enter any URL you want to shorten</li>
           <li>We'll generate a random 4-character ID</li>

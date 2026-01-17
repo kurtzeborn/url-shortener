@@ -75,7 +75,7 @@ function Settings() {
       </div>
 
       <div className="card" style={{ maxWidth: '600px', marginTop: '20px' }}>
-        <h3 style={{ marginBottom: '10px' }}>ℹ️ Invite Limits</h3>
+        <h3 style={{ marginBottom: '10px' }}><i className="fa fa-info-circle"></i> Invite Limits</h3>
         <ul style={{ paddingLeft: '20px', color: '#666' }}>
           <li>Maximum 10 invites per day per user</li>
           <li>Limit resets at midnight UTC</li>
