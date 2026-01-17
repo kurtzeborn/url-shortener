@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 function Settings() {
+  const { getAccessToken } = useAuth();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -17,10 +18,12 @@ function Settings() {
     setSuccess(null);
 
     try {
-      const response = await fetch(`${API_BASE}/api/users/add`, {
+      const token = await getAccessToken();
+      const response = await fetch(`${API_BASE}/api/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ email }),
       });
