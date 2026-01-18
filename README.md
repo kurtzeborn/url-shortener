@@ -38,6 +38,18 @@ flowchart LR
 - 🎯 **Short 4-char IDs** - 14.7M capacity (base62)
 - 🆓 **Free tier** - All services within free limits
 
+## Cost
+
+All services run within free tier limits:
+
+| Service | Free Limit |
+|---------|------------|
+| Azure Functions | 1M executions/month |
+| Azure Table Storage | ~$0.045/GB + $0.00036/10K transactions |
+| Azure Static Web Apps | 100GB bandwidth/month |
+| Cloudflare Workers | 100K requests/day |
+| GitHub Actions | 2000 min/month (public repo) |
+
 ## Project Structure
 
 ```
@@ -92,18 +104,6 @@ All deployments are automatic via GitHub Actions on push to `main`:
 - `UserURLs` - Per-user URL index for dashboard
 - `AllowedUsers` - Email allowlist
 - `UserInvites` - Daily invite rate limiting
-
-## Cost
-
-All services run within free tier limits:
-
-| Service | Free Limit |
-|---------|------------|
-| Azure Functions | 1M executions/month |
-| Azure Table Storage | ~$0.045/GB + $0.00036/10K transactions |
-| Azure Static Web Apps | 100GB bandwidth/month |
-| Cloudflare Workers | 100K requests/day |
-| GitHub Actions | 2000 min/month (public repo) |
 
 ## License
 
