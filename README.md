@@ -93,6 +93,18 @@ All deployments are automatic via GitHub Actions on push to `main`:
 - `AllowedUsers` - Email allowlist
 - `UserInvites` - Daily invite rate limiting
 
+## Cost
+
+All services run within free tier limits:
+
+| Service | Free Limit |
+|---------|------------|
+| Azure Functions | 1M executions/month |
+| Azure Table Storage | ~$0.045/GB + $0.00036/10K transactions |
+| Azure Static Web Apps | 100GB bandwidth/month |
+| Cloudflare Workers | 100K requests/day |
+| GitHub Actions | 2000 min/month (public repo) |
+
 ## License
 
 MIT
