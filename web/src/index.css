@@ -302,7 +302,7 @@ code {
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .select {
