@@ -12,7 +12,7 @@
   "scripts": {
     "test": "npm run test:functions && npm run test:web",
     "test:functions": "npm test --workspace=functions",
-    "test:web": "npm test --workspace=web -- --run",
+    "test:web": "npm test --workspace=web",
     "test:watch": "npm run test:functions -- --watch",
     "test:coverage": "npm run test:functions -- --coverage",
     "lint": "eslint . --ext .js,.ts",
