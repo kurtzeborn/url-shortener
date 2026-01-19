@@ -18,6 +18,16 @@ npm install
 npm run dev  # Start development server at http://localhost:5173
 ```
 
+### Local Development Without Backend
+
+To test the UI without running the Azure Functions backend:
+
+1. Ensure `.env` has `VITE_API_URL` empty (or remove the line)
+2. Start dev server: `npm run dev`
+3. App will use mock data and bypass authentication
+
+This is useful for UI-only changes like styling, layout, or component behavior.
+
 ## Build
 
 ```bash
@@ -32,10 +42,10 @@ npm run build  # Creates production build in dist/
 - [x] Dashboard with sorting and pagination
 - [x] Copy to clipboard
 - [x] Font Awesome icons
+- [x] QR code generation with modal and download
 
 ## Future Enhancements
 
-- [ ] [QR code generation](https://github.com/kurtzeborn/url-shortener/issues/8)
 - [ ] [Dashboard filtering](https://github.com/kurtzeborn/url-shortener/issues/6)
 - [ ] Loading skeletons
 - [ ] Export URLs feature
