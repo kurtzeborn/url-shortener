@@ -375,9 +375,7 @@ code {
   }
 
   .header-content {
-    flex-direction: column;
     gap: 15px;
-    text-align: center;
   }
 
   .url-item {
@@ -405,9 +403,7 @@ code {
     margin-top: 10px;
   }
 
-  .filters {
-    flex-direction: column;
-  }
+
 
   .pagination {
     flex-wrap: wrap;
