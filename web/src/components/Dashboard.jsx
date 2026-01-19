@@ -86,15 +86,14 @@ function Dashboard() {
     <div>
       <h1 style={{ marginBottom: '20px' }}>My URLs</h1>
 
-      <div className="filters">
-        <span style={{ marginRight: '10px', fontWeight: '500' }}>Sort by:</span>
+      <div className="filters" style={{ alignItems: 'center' }}>
+        <span style={{ fontWeight: '500' }}>Sort by:</span>
         <button 
-          className="btn btn-secondary"
+          className="btn btn-icon"
           onClick={() => setSortBy(sortBy === 'date' ? 'clicks' : 'date')}
-          title={`Currently sorting by ${sortBy}`}
+          title={`Sort by ${sortBy === 'date' ? 'Date' : 'Clicks'}`}
         >
           <i className={`fa fa-${sortBy === 'date' ? 'calendar' : 'bar-chart'}`}></i>
-          {' '}{sortBy === 'date' ? 'Date' : 'Clicks'}
         </button>
         <button 
           className="btn btn-icon"
