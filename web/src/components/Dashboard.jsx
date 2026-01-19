@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useApi } from '../hooks/useApi';
+import QRCodeDisplay from './QRCodeDisplay';
 
 function Dashboard() {
   const { get, put, del } = useApi();
@@ -12,6 +13,7 @@ function Dashboard() {
   const [sortOrder, setSortOrder] = useState('desc');
   const [editingUrl, setEditingUrl] = useState(null);
   const [editValue, setEditValue] = useState('');
+  const [qrCodeUrl, setQrCodeUrl] = useState(null);
 
   const fetchUrls = useCallback(async () => {
     setLoading(true);
@@ -126,6 +128,13 @@ function Dashboard() {
                   <div className="url-actions">
                     <button
                       className="btn btn-icon"
+                      onClick={() => setQrCodeUrl(url.shortUrl)}
+                      title="Show QR Code"
+                    >
+                      <i className="fa fa-qrcode"></i>
+                    </button>
+                    <button
+                      className="btn btn-icon"
                       onClick={() => copyToClipboard(url.shortUrl)}
                       title="Copy"
                     >
@@ -190,6 +199,23 @@ function Dashboard() {
                 Save
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {qrCodeUrl && (
+        <div className="modal-overlay" onClick={() => setQrCodeUrl(null)}>
+          <div className="modal qr-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="qr-modal-header">
+              <h3>QR Code</h3>
+              <button 
+                className="btn btn-icon"
+                onClick={() => setQrCodeUrl(null)}
+              >
+                <i className="fa fa-times"></i>
+              </button>
+            </div>
+            <QRCodeDisplay url={qrCodeUrl} />
           </div>
         </div>
       )}

@@ -82,25 +82,28 @@ function App() {
           <div className="logo">k61.dev</div>
           <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary nav-btn"
               onClick={() => setCurrentPage('dashboard')}
               style={{ background: currentPage === 'dashboard' ? '#0066cc' : '#6c757d' }}
+              title="Dashboard"
             >
-              Dashboard
+              <i className="fa fa-home"></i>
             </button>
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary nav-btn"
               onClick={() => setCurrentPage('create')}
               style={{ background: currentPage === 'create' ? '#0066cc' : '#6c757d' }}
+              title="Create URL"
             >
-              Create URL
+              <i className="fa fa-plus"></i>
             </button>
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary nav-btn"
               onClick={() => setCurrentPage('settings')}
               style={{ background: currentPage === 'settings' ? '#0066cc' : '#6c757d' }}
+              title="Settings"
             >
-              Settings
+              <i className="fa fa-cog"></i>
             </button>
             <span style={{ color: '#666', fontSize: '14px' }}>{user?.email}</span>
             <button className="btn btn-secondary" onClick={logout}>

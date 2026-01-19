@@ -5,6 +5,9 @@ import { API_BASE } from '../api';
 
 const AuthContext = createContext(null);
 
+// Development mode bypass
+const DEV_MODE = import.meta.env.MODE === 'development' && !import.meta.env.VITE_API_URL;
+
 export function AuthProvider({ children }) {
   const { instance, accounts } = useMsal();
   const isAuthenticated = useIsAuthenticated();
@@ -33,6 +36,17 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    // Development mode bypass
+    if (DEV_MODE) {
+      setUser({
+        email: 'dev@example.com',
+        name: 'Development User',
+      });
+      setIsAllowed(true);
+      setLoading(false);
+      return;
+    }
+
     if (isAuthenticated && activeAccount) {
       setUser({
         email: activeAccount.username,
@@ -48,6 +62,10 @@ export function AuthProvider({ children }) {
   }, [isAuthenticated, activeAccount, checkUserAllowed]);
 
   const login = useCallback(async () => {
+    // Development mode bypass
+    if (DEV_MODE) {
+      return;
+    }
     try {
       await instance.loginPopup(loginRequest);
     } catch (error) {
@@ -87,7 +105,7 @@ export function AuthProvider({ children }) {
 
   const value = useMemo(() => ({
     user,
-    isAuthenticated,
+    isAuthenticated: DEV_MODE ? true : isAuthenticated, // Always authenticated in dev mode
     isAllowed,
     loading,
     login,
