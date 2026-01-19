@@ -24,7 +24,7 @@ jobs:
         run: |
           # Delete root package.json temporarily to break workspace link
           rm -f ../package.json
-          npm ci
+          npm install
 
       - name: Build TypeScript
         working-directory: ./functions
@@ -34,7 +34,7 @@ jobs:
         working-directory: ./functions
         run: |
           rm -rf node_modules
-          npm ci --omit=dev
+          npm install --omit=dev
 
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
