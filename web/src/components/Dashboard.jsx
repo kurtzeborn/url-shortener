@@ -2,6 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useApi } from '../hooks/useApi';
 import QRCodeDisplay from './QRCodeDisplay';
 
+const SORT_CONFIG = {
+  date: { icon: 'calendar', label: 'Date' },
+  clicks: { icon: 'bar-chart', label: 'Clicks' }
+};
+
 function Dashboard() {
   const { get, put, del } = useApi();
   const [urls, setUrls] = useState([]);
@@ -14,6 +19,9 @@ function Dashboard() {
   const [editingUrl, setEditingUrl] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [qrCodeUrl, setQrCodeUrl] = useState(null);
+
+  const toggleSortBy = () => setSortBy(sortBy === 'date' ? 'clicks' : 'date');
+  const toggleSortOrder = () => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
 
   const fetchUrls = useCallback(async () => {
     setLoading(true);
@@ -84,20 +92,20 @@ function Dashboard() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: '20px' }}>My URLs</h1>
+      <h1 className="page-title">My URLs</h1>
 
-      <div className="filters" style={{ alignItems: 'center' }}>
-        <span style={{ fontWeight: '500' }}>Sort by:</span>
+      <div className="filters">
+        <span className="sort-label">Sort by:</span>
         <button 
           className="btn btn-icon"
-          onClick={() => setSortBy(sortBy === 'date' ? 'clicks' : 'date')}
-          title={`Sort by ${sortBy === 'date' ? 'Date' : 'Clicks'}`}
+          onClick={toggleSortBy}
+          title={`Sort by ${SORT_CONFIG[sortBy].label}`}
         >
-          <i className={`fa fa-${sortBy === 'date' ? 'calendar' : 'bar-chart'}`}></i>
+          <i className={`fa fa-${SORT_CONFIG[sortBy].icon}`}></i>
         </button>
         <button 
           className="btn btn-icon"
-          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+          onClick={toggleSortOrder}
           title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
         >
           <i className={`fa fa-sort-${sortOrder === 'asc' ? 'asc' : 'desc'}`}></i>

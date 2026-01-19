@@ -51,6 +51,14 @@ code {
   color: #0066cc;
 }
 
+.page-title {
+  margin-bottom: 20px;
+}
+
+.sort-label {
+  font-weight: 500;
+}
+
 .nav-btn {
   display: flex;
   align-items: center;
@@ -61,6 +69,14 @@ code {
 
 .nav-btn i {
   font-size: 18px;
+}
+
+.btn i {
+  margin-right: 8px;
+}
+
+.btn-icon i {
+  margin-right: 0;
 }
 
 .hamburger-btn {
@@ -211,61 +227,15 @@ code {
   text-align: center;
 }
 
-/* QR Code Styles */
-.url-qr {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.qr-loading {
+  padding: 20px;
+  text-align: center;
 }
 
-.qr-display {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.qr-thumbnail {
-  width: 80px;
-  height: 80px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.qr-thumbnail:hover {
-  border-color: #0066cc;
-  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
-}
-
-.qr-download {
-  padding: 2px 6px;
-  font-size: 10px;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  color: #6c757d;
-  border-radius: 3px;
-}
-
-.qr-download:hover {
-  background: #0066cc;
-  border-color: #0066cc;
-  color: white;
-}
-
-.qr-placeholder {
-  width: 80px;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f9fa;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  font-size: 10px;
-  color: #999;
+.qr-url-display {
+  margin-top: 15px;
+  color: #666;
+  font-size: 14px;
 }
 
 .qr-modal {
@@ -322,14 +292,7 @@ code {
   gap: 15px;
   margin-bottom: 20px;
   flex-wrap: nowrap;
-}
-
-.select {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  background-color: white;
+  align-items: center;
 }
 
 .loading {
