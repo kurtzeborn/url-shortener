@@ -1,3 +1,7 @@
+:root {
+  --header-height: 74px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -57,6 +61,21 @@ code {
 
 .nav-btn i {
   font-size: 18px;
+}
+
+.hamburger-btn {
+  display: none;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.user-email {
+  color: #666;
+  font-size: 14px;
 }
 
 .btn {
@@ -370,6 +389,42 @@ code {
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: var(--header-height);
+    right: -100%;
+    width: 250px;
+    height: calc(100vh - var(--header-height));
+    background: white;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    gap: 10px;
+    transition: right 0.3s ease;
+    z-index: 1000;
+  }
+
+  .nav-menu.open {
+    right: 0;
+  }
+
+  .nav-menu .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .user-email {
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+  }
+
   .container {
     padding: 10px;
   }

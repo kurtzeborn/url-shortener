@@ -6,7 +6,15 @@ import Settings from './components/Settings';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [menuOpen, setMenuOpen] = useState(false);
   const { user, isAuthenticated, isAllowed, loading, login, logout } = useAuth();
+
+  const navigateTo = (page) => {
+    setCurrentPage(page);
+    setMenuOpen(false);
+  };
+
+  const isActive = (page) => currentPage === page ? '#0066cc' : '#6c757d';
 
   // Show loading state
   if (loading) {
@@ -80,32 +88,39 @@ function App() {
       <header className="header">
         <div className="header-content">
           <div className="logo">k61.dev</div>
-          <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <button 
+            className="btn btn-icon hamburger-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            title="Menu"
+          >
+            <i className="fa fa-bars"></i>
+          </button>
+          <nav className={`nav-menu ${menuOpen ? 'open' : ''}`}>
             <button
               className="btn btn-secondary nav-btn"
-              onClick={() => setCurrentPage('dashboard')}
-              style={{ background: currentPage === 'dashboard' ? '#0066cc' : '#6c757d' }}
+              onClick={() => navigateTo('dashboard')}
+              style={{ background: isActive('dashboard') }}
               title="Dashboard"
             >
               <i className="fa fa-home"></i>
             </button>
             <button
               className="btn btn-secondary nav-btn"
-              onClick={() => setCurrentPage('create')}
-              style={{ background: currentPage === 'create' ? '#0066cc' : '#6c757d' }}
+              onClick={() => navigateTo('create')}
+              style={{ background: isActive('create') }}
               title="Create URL"
             >
               <i className="fa fa-plus"></i>
             </button>
             <button
               className="btn btn-secondary nav-btn"
-              onClick={() => setCurrentPage('settings')}
-              style={{ background: currentPage === 'settings' ? '#0066cc' : '#6c757d' }}
+              onClick={() => navigateTo('settings')}
+              style={{ background: isActive('settings') }}
               title="Settings"
             >
               <i className="fa fa-cog"></i>
             </button>
-            <span style={{ color: '#666', fontSize: '14px' }}>{user?.email}</span>
+            <span className="user-email">{user?.email}</span>
             <button className="btn btn-secondary" onClick={logout}>
               Logout
             </button>
