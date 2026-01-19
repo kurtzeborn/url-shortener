@@ -50,6 +50,7 @@ code {
   align-items: center;
   justify-content: center;
   min-width: 44px;
+  padding: 8px 12px;
 }
 
 .nav-btn i {
