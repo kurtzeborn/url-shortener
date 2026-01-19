@@ -87,20 +87,22 @@ function Dashboard() {
       <h1 style={{ marginBottom: '20px' }}>My URLs</h1>
 
       <div className="filters">
-        <div>
-          <label>Sort by: </label>
-          <select className="select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="date">Date</option>
-            <option value="clicks">Clicks</option>
-          </select>
-        </div>
-        <div>
-          <label>Order: </label>
-          <select className="select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-          </select>
-        </div>
+        <span style={{ marginRight: '10px', fontWeight: '500' }}>Sort by:</span>
+        <button 
+          className="btn btn-secondary"
+          onClick={() => setSortBy(sortBy === 'date' ? 'clicks' : 'date')}
+          title={`Currently sorting by ${sortBy}`}
+        >
+          <i className={`fa fa-${sortBy === 'date' ? 'calendar' : 'bar-chart'}`}></i>
+          {' '}{sortBy === 'date' ? 'Date' : 'Clicks'}
+        </button>
+        <button 
+          className="btn btn-icon"
+          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+          title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+        >
+          <i className={`fa fa-sort-${sortOrder === 'asc' ? 'asc' : 'desc'}`}></i>
+        </button>
       </div>
 
       {urls.length === 0 ? (
