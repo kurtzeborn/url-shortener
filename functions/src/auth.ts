@@ -76,8 +76,11 @@ export function validateToken(token: string): Promise<DecodedToken> {
           return;
         }
 
+        const normalizedEmail = email.toLowerCase().trim();
+        console.log(`[AUTH] Token validated for email: ${normalizedEmail}`);
+
         resolve({
-          email: email.toLowerCase(),
+          email: normalizedEmail,
           name: verifiedPayload.name,
           oid: verifiedPayload.oid,
           sub: verifiedPayload.sub,
@@ -112,9 +115,13 @@ export async function isUserAllowed(email: string): Promise<boolean> {
   try {
     await ensureTableExists('AllowedUsers');
     const client = getTableClient('AllowedUsers');
-    await client.getEntity('users', email.toLowerCase());
+    const normalizedEmail = email.toLowerCase().trim();
+    console.log(`[AUTH] Checking if user is allowed: ${normalizedEmail}`);
+    await client.getEntity('users', normalizedEmail);
+    console.log(`[AUTH] User ${normalizedEmail} found in AllowedUsers table`);
     return true;
-  } catch {
+  } catch (error) {
+    console.log(`[AUTH] User ${email.toLowerCase().trim()} NOT found in AllowedUsers table:`, error);
     return false;
   }
 }
@@ -126,7 +133,8 @@ export async function getAllowedUserInfo(email: string): Promise<{ addedDate: st
   try {
     await ensureTableExists('AllowedUsers');
     const client = getTableClient('AllowedUsers');
-    const entity = await client.getEntity('users', email.toLowerCase());
+    const normalizedEmail = email.toLowerCase().trim();
+    const entity = await client.getEntity('users', normalizedEmail);
     return {
       addedDate: entity.AddedDate as string,
       addedBy: entity.AddedBy as string,

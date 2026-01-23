@@ -38,9 +38,11 @@ export async function addUser(
       return responses.badRequest('Invalid email format', 'INVALID_EMAIL');
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     // Check if email already exists
     try {
-      await allowedUsersClient.getEntity('users', email.toLowerCase());
+      await allowedUsersClient.getEntity('users', normalizedEmail);
       return responses.conflict('Email already exists in allowlist', 'EMAIL_EXISTS');
     } catch {
       // Email doesn't exist - proceed
@@ -66,7 +68,7 @@ export async function addUser(
     const now = new Date().toISOString();
     await allowedUsersClient.createEntity({
       partitionKey: 'users',
-      rowKey: email.toLowerCase(),
+      rowKey: normalizedEmail,
       AddedAt: now,
       AddedBy: currentUserEmail,
     });
@@ -90,7 +92,7 @@ export async function addUser(
     }
 
     return responses.created({
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       addedAt: now,
       addedBy: currentUserEmail,
       remainingInvites: 10 - (inviteCount + 1),

@@ -13,6 +13,6 @@ The CI/CD pipeline uses `npm ci` which requires these files to be in sync.
 ## Development Workflow
 
 - Use the dev mode bypass documented in `web/README.md` for UI-only testing
-- Run tests before committing: `npm test`
 - Follow existing code patterns and style
 - Keep commit messages concise (3-5 bullets max)
+- GitHub Actions automatically runs all tests on push/PR - monitor for failures and address them promptly
