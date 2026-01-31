@@ -1,7 +1,7 @@
 name = "k61-dev-redirector"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
-account_id = "4ea5db67f7efd8ffd612c68abc7bd48a"
+account_id = "cfd16cf97da3b933b26c7e996d1c8433"
 
 # Route all traffic from k61.dev/* to this worker
 routes = [

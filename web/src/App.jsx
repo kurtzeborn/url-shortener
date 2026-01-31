@@ -72,10 +72,10 @@ function App() {
           <div className="card" style={{ maxWidth: '500px', margin: '100px auto', textAlign: 'center' }}>
             <h1 style={{ marginBottom: '20px', color: '#dc3545' }}>Access Denied</h1>
             <p style={{ marginBottom: '20px', color: '#666' }}>
-              Your account ({user?.email}) is not authorized to use this application.
+              Your account (<strong>{user?.email}</strong>) is not authorized to use this application.
             </p>
             <p style={{ color: '#666' }}>
-              Please contact an existing user to request access.
+              Ask an existing user to invite you using the email address above.
             </p>
           </div>
         </div>
