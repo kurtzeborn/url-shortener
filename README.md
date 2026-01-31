@@ -35,6 +35,45 @@ flowchart LR
     Functions -->|CRUD| Storage
 ```
 
+## Table Schema
+
+```mermaid
+erDiagram
+    AllowedUsers {
+        string PartitionKey "always 'user'"
+        string RowKey "email (lowercase)"
+        string addedBy "inviter email"
+        datetime addedAt
+    }
+    
+    URLs {
+        string PartitionKey "first 2 chars of shortcode"
+        string RowKey "shortcode (e.g. 2Tn3)"
+        string URL "destination URL"
+        string Owner "creator email"
+        int ClickCount
+        datetime CreatedAt
+    }
+    
+    UserURLs {
+        string PartitionKey "owner email"
+        string RowKey "shortcode"
+        string URL "destination URL"
+        int ClickCount
+        datetime CreatedAt
+    }
+    
+    UserInvites {
+        string PartitionKey "inviter email"
+        string RowKey "date (YYYY-MM-DD)"
+        int InviteCount "invites sent that day"
+    }
+    
+    AllowedUsers ||--o{ URLs : "owns"
+    AllowedUsers ||--o{ UserURLs : "owns"
+    AllowedUsers ||--o{ UserInvites : "sent"
+```
+
 ## Features
 
 - ⚡ **Sub-10ms redirects** via Cloudflare Workers edge network
