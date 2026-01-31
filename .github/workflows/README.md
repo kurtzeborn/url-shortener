@@ -9,8 +9,9 @@ Deploys Cloudflare Worker on changes to `workers/` directory.
 
 **Required Secrets:**
 - `CLOUDFLARE_API_TOKEN` - Cloudflare API token with Workers deploy permissions
+- `DEFAULT_URL` - URL to redirect unknown/invalid IDs (e.g., https://url.yourdomain.com)
 - `AZURE_STORAGE_ACCOUNT` - Azure storage account name
-- `AZURE_STORAGE_KEY` - Azure storage account key
+- `AZURE_STORAGE_SAS` - SAS token for Table Storage access
 - `AZURE_API_URL` - Azure Functions API URL (e.g., https://my-func.azurewebsites.net)
 - `INTERNAL_API_KEY` - Secure random key for internal API
 

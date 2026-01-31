@@ -77,6 +77,9 @@ Required for Microsoft authentication.
 2. Go to **Workers & Pages** → Create Worker
 3. Name: `k61-redirect`
 4. Add environment variables:
+   - `DEFAULT_URL`: `https://url.k61.dev` (where to redirect unknown/invalid IDs)
+   - `AZURE_STORAGE_ACCOUNT`: Your storage account name
+   - `AZURE_STORAGE_SAS`: SAS token for Table Storage access
    - `AZURE_API_URL`: `https://<your-function-app>.azurewebsites.net`
    - `INTERNAL_API_KEY`: (same as Function App)
 5. Get **API Token** with Workers:Edit permission
@@ -103,8 +106,9 @@ Go to repo **Settings** → **Secrets and variables** → **Actions** → Add:
 | `AZURE_STATIC_WEB_APPS_API_TOKEN_LANDING` | www.k61.dev deployment token |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
+| `DEFAULT_URL` | URL to redirect unknown IDs (e.g., https://url.k61.dev) |
 | `AZURE_STORAGE_ACCOUNT` | Storage account name |
-| `AZURE_STORAGE_KEY` | Storage account key |
+| `AZURE_STORAGE_SAS` | SAS token for Table Storage access |
 | `AZURE_API_URL` | Function App URL (https://xxx.azurewebsites.net) |
 | `INTERNAL_API_KEY` | Random 32-char key for internal API |
 

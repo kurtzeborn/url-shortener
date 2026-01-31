@@ -6,23 +6,30 @@
 // Reserved paths that should redirect to the app
 const RESERVED_PATHS = ['favicon.ico', 'robots.txt', 'sitemap.xml', ''];
 
-// Base URL for the app
-const APP_URL = 'https://url.k61.dev';
-
 export default {
   async fetch(request, env, ctx) {
+    // Get default URL from environment variable (required)
+    const defaultUrl = env.DEFAULT_URL;
+    
+    if (!defaultUrl) {
+      return new Response('Worker misconfigured: DEFAULT_URL environment variable is required', {
+        status: 500,
+        headers: { 'Content-Type': 'text/plain' },
+      });
+    }
+    
     try {
       const url = new URL(request.url);
       const id = url.pathname.slice(1); // Remove leading /
 
       // Handle reserved paths - redirect to app
       if (RESERVED_PATHS.includes(id)) {
-        return Response.redirect(APP_URL, 302);
+        return Response.redirect(defaultUrl, 302);
       }
 
       // Validate ID format (base62: a-z, A-Z, 0-9)
       if (!isValidId(id)) {
-        return Response.redirect(APP_URL, 302);
+        return Response.redirect(defaultUrl, 302);
       }
 
       // Look up URL in Azure Table Storage
@@ -37,11 +44,11 @@ export default {
       }
 
       // ID not found, redirect to app
-      return Response.redirect(APP_URL, 302);
+      return Response.redirect(defaultUrl, 302);
     } catch (error) {
       console.error('Worker error:', error);
       // On error, redirect to app
-      return Response.redirect(APP_URL, 302);
+      return Response.redirect(defaultUrl, 302);
     }
   },
 };

@@ -3,17 +3,20 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 account_id = "cfd16cf97da3b933b26c7e996d1c8433"
 
-# Route all traffic from k61.dev/* to this worker
+# Route all traffic from your domain to this worker
+# Update these for your domain
 routes = [
   { pattern = "k61.dev/*", zone_name = "k61.dev" }
 ]
 
-# Environment variables (set via CLI or dashboard)
-# For local dev, create a .dev.vars file with:
-# AZURE_STORAGE_ACCOUNT=devstoreaccount1
-# AZURE_STORAGE_KEY=your-key
-# AZURE_API_URL=http://localhost:7071
-# INTERNAL_API_KEY=dev-api-key
+# Environment variables (secrets - set via `wrangler secret put <NAME>`):
+# - DEFAULT_URL: URL to redirect to for unknown IDs (e.g., https://url.yourdomain.com)
+# - AZURE_STORAGE_ACCOUNT: Azure storage account name
+# - AZURE_STORAGE_SAS: SAS token for Table Storage access
+# - AZURE_API_URL: Azure Functions base URL
+# - INTERNAL_API_KEY: Secure key for click tracking API
+#
+# For local dev, create a .dev.vars file with these variables
 
 [env.development]
 name = "k61-dev-redirector-dev"

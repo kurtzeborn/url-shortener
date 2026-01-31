@@ -94,8 +94,6 @@ az staticwebapp secrets list \
   --resource-group url-shortener-rg
 ```
 
-> **Note:** The www.k61.dev landing page is in a [separate repo](https://github.com/kurtzeborn/k61.dev).
-
 ## Step 3: Cloudflare Setup
 
 ### 3.1 Add Domain to Cloudflare
@@ -125,6 +123,7 @@ Add these secrets in GitHub repository settings:
 
 ### Cloudflare Worker
 - `CLOUDFLARE_API_TOKEN` - API token from Step 3.3
+- `DEFAULT_URL` - URL to redirect unknown/invalid IDs (e.g., https://url.k61.dev)
 - `AZURE_STORAGE_ACCOUNT` - Storage account name (k61urlshortener)
 - `AZURE_STORAGE_SAS` - SAS token from Azure Portal → Storage Account → Shared access signature
 - `AZURE_API_URL` - Azure Functions URL (e.g., https://k61-url-functions.azurewebsites.net)
