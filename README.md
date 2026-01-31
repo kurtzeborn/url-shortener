@@ -1,9 +1,9 @@
 # k61.dev URL Shortener
 
-![functions](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/deploy-functions.yml?label=functions)
-![web](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/deploy-web.yml?label=web)
-![worker](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/deploy-worker.yml?label=worker)
-![tests](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/test.yml?label=tests)
+[![functions](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/deploy-functions.yml?label=functions)](https://github.com/kurtzeborn/url-shortener/actions/workflows/deploy-functions.yml)
+[![web](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/deploy-web.yml?label=web)](https://github.com/kurtzeborn/url-shortener/actions/workflows/deploy-web.yml)
+[![worker](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/deploy-worker.yml?label=worker)](https://github.com/kurtzeborn/url-shortener/actions/workflows/deploy-worker.yml)
+[![tests](https://img.shields.io/github/actions/workflow/status/kurtzeborn/url-shortener/test.yml?label=tests)](https://github.com/kurtzeborn/url-shortener/actions/workflows/test.yml)
 
 A serverless URL shortener built on Azure and Cloudflare with sub-10ms edge redirects.
 
