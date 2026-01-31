@@ -103,10 +103,6 @@ All services run within free tier limits:
 └── docs/         # Documentation
 ```
 
-> **Note:** The www.k61.dev landing page is in a [separate repo](https://github.com/kurtzeborn/k61.dev).
-└── docs/         # Documentation
-```
-
 ## Development
 
 ```bash
