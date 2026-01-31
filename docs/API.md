@@ -1,6 +1,6 @@
 # URL Shortener API Documentation
 
-Base URL: `https://api.k61.dev` (production) or `http://localhost:7071` (development)
+Base URL: `https://<your-function-app>.azurewebsites.net` (production) or `http://localhost:7071` (development)
 
 ## Authentication
 
@@ -59,7 +59,7 @@ POST /api/urls
 ```json
 {
   "id": "aBc1",
-  "shortUrl": "https://k61.dev/aBc1",
+  "shortUrl": "https://yourdomain.com/aBc1",
   "url": "https://example.com/long/url",
   "createdAt": "2026-01-16T12:00:00.000Z",
   "clickCount": 0
@@ -87,7 +87,7 @@ GET /api/urls
   "urls": [
     {
       "id": "aBc1",
-      "shortUrl": "https://k61.dev/aBc1",
+      "shortUrl": "https://yourdomain.com/aBc1",
       "url": "https://example.com/long/url",
       "createdAt": "2026-01-16T12:00:00.000Z",
       "clickCount": 42
@@ -115,7 +115,7 @@ GET /api/urls/{id}
 ```json
 {
   "id": "aBc1",
-  "shortUrl": "https://k61.dev/aBc1",
+  "shortUrl": "https://yourdomain.com/aBc1",
   "url": "https://example.com/long/url",
   "createdAt": "2026-01-16T12:00:00.000Z",
   "clickCount": 42
@@ -140,7 +140,7 @@ PUT /api/urls/{id}
 ```json
 {
   "id": "aBc1",
-  "shortUrl": "https://k61.dev/aBc1",
+  "shortUrl": "https://yourdomain.com/aBc1",
   "url": "https://example.com/new/url",
   "updatedAt": "2026-01-16T13:00:00.000Z"
 }
@@ -229,6 +229,6 @@ X-Internal-Key: <INTERNAL_API_KEY>
 
 | Variable | Description |
 |----------|-------------|
-| `SHORT_URL_DOMAIN` | Domain for short URLs (default: `k61.dev`) |
+| `SHORT_URL_DOMAIN` | Domain for short URLs (e.g., `yourdomain.com`) |
 | `AZURE_STORAGE_CONNECTION_STRING` | Azure Table Storage connection |
 | `INTERNAL_API_KEY` | Key for internal API authentication |

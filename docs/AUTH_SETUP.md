@@ -1,15 +1,17 @@
 # Authentication Setup Guide
 
-## Azure AD App Registration
+This guide covers Microsoft authentication configuration in detail. For the complete deployment process, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
-To enable Microsoft authentication, you need to register an application in Azure AD:
+## Microsoft Entra ID App Registration
+
+To enable Microsoft authentication, you need to register an application in Microsoft Entra ID:
 
 ### Step 1: Create App Registration
 1. Go to [Azure Portal](https://portal.azure.com)
-2. Navigate to **Azure Active Directory** > **App registrations**
+2. Navigate to **Microsoft Entra ID** > **App registrations**
 3. Click **New registration**
 4. Fill in:
-   - **Name**: `URL Shortener (k61.dev)`
+   - **Name**: `URL Shortener`
    - **Supported account types**: Select one of:
      - "Personal Microsoft accounts only" (if only personal accounts)
      - "Accounts in any organizational directory and personal Microsoft accounts" (if both work and personal)
@@ -20,7 +22,7 @@ To enable Microsoft authentication, you need to register an application in Azure
 ### Step 2: Configure Redirect URIs
 After creation, go to **Authentication** and add:
 - `http://localhost:5173` (local development)
-- `https://url.k61.dev` (production)
+- `https://url.yourdomain.com` (production - replace with your actual domain)
 
 ### Step 3: Get Client ID
 1. Go to the app's **Overview** page
